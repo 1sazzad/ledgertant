@@ -22,7 +22,7 @@ function storySteps(){
   return [
    ["01","Catch the suspicious invoice","Review supplier identity, duplicate references and unusual amounts.","invoices","Investigate risk →"],
    ["02","Understand the cash impact","See the next eight weeks and stress-test revenue.","cashflow","Model cash →"],
-   ["03","Get funding direction","Compare illustrative financing paths without applying for credit.","financing","Explore options →"],
+   ["03","Test payment timing","Compare pay-now, scheduled and supplier-extension cash consequences.","decisionlab","Compare choices →"],
    ["04","Protect the payment","Check permissions, simulate approvals and record the evidence.","security","Test safeguards →"]
   ].map(([num,title,desc,view,action])=>'<div class="story-step"><span class="step-number">'+num+'</span><h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p><button class="link-action" data-experience="view" data-view="'+view+'">'+esc(action)+'</button></div>').join("");
 }
