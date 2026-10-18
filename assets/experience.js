@@ -1,7 +1,7 @@
 /* Guided offline SME storytelling layer. Presentation state is transient; scenario data is local. */
 (function(root){
 "use strict";
-let scenario="fraud",tourActive=false,tourIndex=0,tourFinished=false;
+let scenario="fraud",tourActive=false,tourIndex=0,tourFinished=false,expandedResult="";
 const CORE=root.LedgertantJourney;
 if(!CORE)throw new Error("LedgertantJourney must be loaded first");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -26,6 +26,16 @@ function storySteps(){
    ["04","Protect the payment","Check permissions, simulate approvals and record the evidence.","security","Test safeguards →"]
   ].map(([num,title,desc,view,action])=>'<div class="story-step"><span class="step-number">'+num+'</span><h3>'+esc(title)+'</h3><p>'+esc(desc)+'</p><button class="link-action" data-experience="view" data-view="'+view+'">'+esc(action)+'</button></div>').join("");
 }
+function evidenceResults(){
+ const m=CORE.impact(state,LedgertantEngine);
+ const cards=[
+  ["fraud","Invoice screening",m.flaggedCount+" warnings","Warnings require investigation, not proof of fraud.","invoices"],
+  ["cash","Cash under stress",fmt(m.stressLow),"This is an illustrative eight-week model with reduced revenue, not a validated forecast.","cashflow"],
+  ["payments","Simulated payment outcomes",m.paymentsMade+" payments","All approvals and payments are browser-only simulations; no funds move.","payments"],
+  ["audit","Decision evidence",m.auditEvents+" logged actions","Audit entries are locally stored, not tamper-proof.","audit"]
+ ];
+ return '<div class="section"><span class="eyebrow">04 / EXPLORE THE OUTCOME</span><h2>Interactive result breakdown</h2><p class="muted">Select a result card to understand it, then open the supporting module.</p><div class="result-list">'+cards.map(c=>'<div><button class="result-entry" aria-expanded="'+(expandedResult===c[0])+'" data-experience="result" data-result="'+c[0]+'"><strong>'+esc(c[1])+' · '+esc(c[2])+'</strong><small>Explore this outcome '+(expandedResult===c[0]?'−':'+')+'</small></button>'+(expandedResult===c[0]?'<div class="result-detail"><h4>What this means</h4><p>'+esc(c[3])+'</p><button class="btn secondary" data-experience="view" data-view="'+c[4]+'">View supporting evidence →</button></div>':'')+'</div>').join('')+'</div></div>';
+}
 function renderJourney(){
  const target=document.getElementById("journey");if(!target)return;
  const m=CORE.impact(state,LedgertantEngine);
@@ -41,7 +51,7 @@ function renderJourney(){
  metric("Lowest stress-case cash",fmt(m.stressLow),"Assumes 35% lower weekly sales",m.stressLow<0?"alert":"")+
  '</div><p class="footnote">All numbers are derived from the loaded synthetic scenario. No score is a calibrated fraud probability; review exposure is not money saved.</p></div>'+
  '<div class="section"><span class="eyebrow">03 / FOLLOW THE DECISION</span><h2>One connected financial journey</h2><div class="story-grid">'+storySteps()+'</div></div>'+
- '<div class="section"><div class="grid g2"><div class="card"><span class="eyebrow">WITHOUT CONTROLS</span><h3>Fragmented decisions</h3><p class="muted">An invoice arrives by email. The owner separately checks accounting sheets, messages a supplier, estimates bank liquidity and approves a payment with limited visibility.</p></div><div class="card journey-outcome"><span class="eyebrow">WITH LEDGERTANT</span><h3>One auditable review sequence</h3><p>Review invoice warnings → assess cash consequences → compare choices → require human authorization → record simulated decisions.</p></div></div></div>';
+ '<div class="section"><div class="grid g2"><div class="card"><span class="eyebrow">WITHOUT CONTROLS</span><h3>Fragmented decisions</h3><p class="muted">An invoice arrives by email. The owner separately checks accounting sheets, messages a supplier, estimates bank liquidity and approves a payment with limited visibility.</p></div><div class="card journey-outcome"><span class="eyebrow">WITH LEDGERTANT</span><h3>One auditable review sequence</h3><p>Review invoice warnings → assess cash consequences → compare choices → require human authorization → record simulated decisions.</p></div></div></div>'+evidenceResults();
 }
 function renderBanner(){
  const target=document.getElementById("overview");if(!target)return;
@@ -89,6 +99,7 @@ document.addEventListener("click",event=>{
  else if(action==="scenario")chooseScenario(el.dataset.kind);
  else if(action==="view")navigate(el.dataset.view);
  else if(action==="report")downloadReport();
+ else if(action==="result"){expandedResult=expandedResult===el.dataset.result?"":el.dataset.result;renderJourney()}
 });
 document.addEventListener("keydown",event=>{if(event.key==="Escape"&&tourActive){tourActive=false;renderTour()}});
 root.LedgertantExperience=Object.freeze({render,navigate,impact:()=>CORE.impact(state,LedgertantEngine),getScenario:()=>scenario});
