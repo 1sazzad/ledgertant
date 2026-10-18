@@ -125,3 +125,24 @@ Invoices marked `verified` remain unpaid until the user runs an eligible owner-o
 - Syntax checks performed for `index.html`, `assets/engine.js`, `assets/decision-core.js`, `assets/journey-core.js`, and `assets/experience.js`.
 - Smoke-checked suspicious invoice HOLD verdict, retained supplier risk after demo verification, and inclusion of verified unpaid invoices in forecast outflows.
 - Added `tests/decision.test.js`. Run all Node tests locally with `node --test tests/*.test.js`. Full browser end-to-end automation is not included.
+
+## Competition upgrade — Payment Timing Decision Lab
+
+New left-navigation module: **Decision lab**.
+
+Judges can select any unpaid synthetic invoice, change the revenue scenario (base, 35% stress, or 20% growth), and set a minimum cash reserve. The client-side engine compares **pay now**, **pay on due week**, and **request a two-week extension**, showing projected lowest cash, closing cash, weeks below the reserve, and an eight-week trajectory. Options are hypotheticals, not actual payment requests or a supplier-approved extension.
+
+Risk and role gates remain visible: changed bank details and other suspicious invoices produce a HOLD; finance staff require owner authorization; insufficient cash blocks payment. The underlying finance model is simple weekly deterministic cash flow, not a trained forecaster.
+
+Technical pieces:
+- `assets/decision-lab-core.js`: pure side-effect-free evaluation; never modifies the actual ledger
+- `tests/decision-lab.test.js`: twelve assertions for timing, liquidity, role/risk gates, non-mutation, horizon disclosures
+- `index.html`: new accessible interactive Decision Lab interface
+
+**Suggested competition showcase:** load the suspicious supplier story, open the Decision Lab, select a suspicious invoice, demonstrate HOLD; then compare a legitimate invoice under stress, select the three different timing cases and explain why a human must approve. Show the Decision ledger to close the loop.
+
+**Technical validation:** 47 JavaScript assertions and syntax checks completed in an isolated JS evaluator during preparation. GitHub Actions has reported jobs failing before a runner started; independent GitHub-hosted CI validation is not yet confirmed. Full cross-browser testing is still recommended.
+
+### Evidence and limitations
+
+No claim is made of measured fraud prevention, saved funds, bank integrations, a live LLM, validated credit offers, enforcement-grade authorization, or immutable audit history. Any real implementation would require server-side identity, strong approvals, supplier verification, licensed payments, user consent, model evaluation and appropriate jurisdictional compliance.
