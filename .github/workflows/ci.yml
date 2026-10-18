@@ -1,0 +1,29 @@
+name: Ledgertant checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/engine.js
+          node --check assets/journey-core.js
+          node --check assets/decision-core.js
+          node --check assets/experience.js
+          node -e "const fs=require('fs');const src=fs.readFileSync('index.html','utf8');const m=src.match(/<script>([\\s\\S]*?)<\\/script>/);if(!m)process.exit(1);new Function(m[1]);"
+      - name: Run unit tests
+        run: node --test tests/*.test.js
+      - name: Static data safety check
+        run: |
+          node -e "const fs=require('fs');const s=fs.readFileSync('index.html','utf8');if(!s.includes('No transfers')&&!s.includes('No real funds'))console.log('Review UI disclaimers');if(!s.includes('assets/decision-core.js'))process.exit(1)"
