@@ -101,3 +101,27 @@ The extra code is under `assets/journey-core.js` (pure fixture and calculation h
 - [ ] Export a demo brief and identify what is not implemented in this serverless prototype.
 
 All authorization is simulated in the browser and must not be used to protect genuine money or identities.
+
+
+## UX upgrade — guided decisions and explorable outcomes (October 2026)
+
+This update turns the seven-step tour into an action-oriented demonstration. In **Security lab** (step 5), select **Finance staff → Release payment → Evaluate policy** to show why an unprivileged payment action is blocked. In **Payment controls** (step 6), click **Should I pay?** to open the invoice-specific decision panel. It distinguishes:
+
+- **HOLD — do not pay yet:** suspicious/unverified invoice or insufficient cash.
+- **OWNER APPROVAL REQUIRED:** staff may investigate but cannot release a payment.
+- **Eligible for owner simulation:** controls pass; owner must still assess liquidity and explicitly confirm.
+- **Simulated payment completed:** demo ledger only, with a local audit entry.
+
+Each decision shows fraud rule signals, current cash after payment, eight-week stress floor, checklist, and next action. Owner demo verification is explicitly labelled as fictional confirmation and **does not remove the underlying warnings**. Changes in supplier banking details require genuine out-of-band verification in any production implementation; the demo does not perform that verification.
+
+Step 7 guides users to the **Decision ledger**. Click an individual activity entry to inspect its contents or export the CSV. The **Demo experience** screen now includes expandable **Interactive result breakdown** cards that link to the relevant supporting evidence.
+
+### Corrected finance behavior
+
+Invoices marked `verified` remain unpaid until the user runs an eligible owner-only payment simulation. Their amounts are now properly retained in the eight-week cash-flow forecast. A rule-risk flag does not automatically make a payment safe or recommend paying.
+
+### Validation
+
+- Syntax checks performed for `index.html`, `assets/engine.js`, `assets/decision-core.js`, `assets/journey-core.js`, and `assets/experience.js`.
+- Smoke-checked suspicious invoice HOLD verdict, retained supplier risk after demo verification, and inclusion of verified unpaid invoices in forecast outflows.
+- Added `tests/decision.test.js`. Run all Node tests locally with `node --test tests/*.test.js`. Full browser end-to-end automation is not included.
