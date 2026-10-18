@@ -92,4 +92,5 @@ document.addEventListener("click",event=>{
 });
 document.addEventListener("keydown",event=>{if(event.key==="Escape"&&tourActive){tourActive=false;renderTour()}});
 root.LedgertantExperience=Object.freeze({render,navigate,impact:()=>CORE.impact(state,LedgertantEngine),getScenario:()=>scenario});
+render();
 })(globalThis);
