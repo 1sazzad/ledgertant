@@ -19,7 +19,7 @@ function forecast(state,mode="base"){
   let balance=number(state.balance);
   return Array.from({length:8},(_,ix)=>{
     const week=ix+1;
-    const invoiceOut=(state.invoices||[]).filter(i=>i.status==="pending"&&number(i.due)===week).reduce((a,i)=>a+number(i.amount),0);
+    const invoiceOut=(state.invoices||[]).filter(i=>["pending","verified"].includes(i.status)&&number(i.due)===week).reduce((a,i)=>a+number(i.amount),0);
     balance+=number(state.weeklyIncome)*factor-number(state.weeklyOperating)-invoiceOut;
     return {week,balance,invoiceOut};
   });
