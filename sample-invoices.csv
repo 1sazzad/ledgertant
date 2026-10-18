@@ -1,0 +1,7 @@
+reference,supplier,amount_BDT,bank_identifier,due_week,scenario
+BS-2401,Bright Supply Co,42500,BD18-101-7788,1,ordinary
+MP-1077,Metro Packaging,55200,BD32-204-9921,2,ordinary
+BS-2401,Bright Supply Co,42500,BD18-101-7788,3,duplicate_reference
+IT-800,Cloudbridge IT,14900,BD90-009-7777,1,changed_bank_details
+MP-1078,Metro Packaging,184000,BD32-204-9921,2,amount_outlier
+NS-882,Nova Wholesale,78000,BD55-333-8111,4,unrecognized_supplier
