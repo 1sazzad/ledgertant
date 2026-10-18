@@ -1,7 +1,7 @@
 /* Guided offline SME storytelling layer. Presentation state is transient; scenario data is local. */
 (function(root){
 "use strict";
-let scenario="fraud",tourActive=false,tourIndex=0,tourFinished=false,expandedResult="";
+let scenario="fraud",tourActive=false,tourIndex=0,tourFinished=false,expandedResult="",tourMinimized=false;
 const CORE=root.LedgertantJourney;
 if(!CORE)throw new Error("LedgertantJourney must be loaded first");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -64,10 +64,16 @@ function ensureTour(){
 }
 function renderTour(){
  const el=ensureTour();
- if(!tourActive){el.hidden=true;el.innerHTML="";return}
+ if(!tourActive){el.hidden=true;el.innerHTML="";el.classList.remove("tour-minimized");document.body.classList.remove("tour-running");return}
  const step=CORE.steps[tourIndex],count=CORE.steps.length;
  el.hidden=false;
- el.innerHTML='<div class="tour-head"><span class="eyebrow">LIVE JUDGE WALKTHROUGH</span><button aria-label="Close guided walkthrough" data-experience="close" class="close-tour">✕</button></div><div class="tour-progress" role="progressbar" aria-valuenow="'+(tourIndex+1)+'" aria-valuemin="1" aria-valuemax="'+count+'" aria-label="Tour step"><span style="width:'+Math.round((tourIndex+1)/count*100)+'%"></span></div><div class="tour-counter">STEP '+(tourIndex+1)+' OF '+count+'</div><h3>'+esc(step.title)+'</h3><p>'+esc(step.detail)+'</p><div class="notice">'+esc(tourIndex===4?'Action: set actor to Finance staff, choose Release payment, and evaluate. Expect BLOCK with an explanation.':tourIndex===5?'Action: open Should I pay? for a flagged invoice. HOLD means stop and verify. Owner confirmation is required even for eligible invoices.':tourIndex===6?'Action: inspect decision evidence, export the audit CSV and explore expandable result cards in Demo experience.':'Action: inspect this module and explain the evidence before continuing.')+'</div><button class="btn outline tour-open" data-experience="view" data-view="'+esc(step.key)+'">'+esc(step.action)+' ↗</button><div class="tour-footer"><button class="btn secondary" '+(tourIndex===0?"disabled":"")+' data-experience="prev">← Back</button><button class="btn" data-experience="next">'+(tourIndex===count-1?"Finish tour ✓":"Next step →")+'</button></div>';
+ document.body.classList.add("tour-running");
+ el.classList.toggle("tour-minimized",tourMinimized);
+ if(tourMinimized){
+  el.innerHTML='<div class="tour-mini"><div><span class="tour-counter">GUIDED DEMO · STEP '+(tourIndex+1)+' / '+count+'</span><strong>'+esc(step.title)+'</strong></div><button class="btn secondary" data-experience="minimize">Expand ↑</button></div>';
+  return;
+ }
+ el.innerHTML='<div class="tour-head"><span class="eyebrow">LIVE JUDGE WALKTHROUGH</span><div class="tour-head-actions"><button class="btn secondary" data-experience="minimize" aria-label="Minimize guided walkthrough">Minimize ↓</button><button aria-label="Close guided walkthrough" data-experience="close" class="close-tour">✕</button></div></div><div class="tour-progress" role="progressbar" aria-valuenow="'+(tourIndex+1)+'" aria-valuemin="1" aria-valuemax="'+count+'" aria-label="Tour step"><span style="width:'+Math.round((tourIndex+1)/count*100)+'%"></span></div><div class="tour-counter">STEP '+(tourIndex+1)+' OF '+count+'</div><h3>'+esc(step.title)+'</h3><p>'+esc(step.detail)+'</p><div class="notice">'+esc(tourIndex===4?'Action: set actor to Finance staff, choose Release payment, and evaluate. Expect BLOCK with an explanation.':tourIndex===5?'Action: open Should I pay? for a flagged invoice. HOLD means stop and verify. Owner confirmation is required even for eligible invoices.':tourIndex===6?'Action: inspect decision evidence, export the audit CSV and explore expandable result cards in Demo experience.':'Action: inspect this module and explain the evidence before continuing.')+'</div><button class="btn outline tour-open" data-experience="view" data-view="'+esc(step.key)+'">'+esc(step.action)+' ↗</button><div class="tour-footer"><button class="btn secondary" '+(tourIndex===0?"disabled":"")+' data-experience="prev">← Back</button><button class="btn" data-experience="next">'+(tourIndex===count-1?"Finish tour ✓":"Next step →")+'</button></div>';
 }
 function render(){
  renderJourney();renderBanner();renderTour();
@@ -92,10 +98,11 @@ function downloadReport(){
 document.addEventListener("click",event=>{
  const el=event.target.closest("[data-experience]");if(!el)return;
  const action=el.dataset.experience;
- if(action==="start"){tourActive=true;tourIndex=0;tourFinished=false;navigate(CORE.steps[0].key);}
+ if(action==="start"){tourMinimized=false;tourActive=true;tourIndex=0;tourFinished=false;navigate(CORE.steps[0].key);}
  else if(action==="next"){if(tourIndex>=CORE.steps.length-1){tourActive=false;tourFinished=true;navigate("journey")}else{tourIndex++;navigate(CORE.steps[tourIndex].key)}}
  else if(action==="prev"){tourIndex=Math.max(0,tourIndex-1);navigate(CORE.steps[tourIndex].key)}
  else if(action==="close"){tourActive=false;renderTour()}
+ else if(action==="minimize"){tourMinimized=!tourMinimized;renderTour()}
  else if(action==="scenario")chooseScenario(el.dataset.kind);
  else if(action==="view")navigate(el.dataset.view);
  else if(action==="report")downloadReport();
