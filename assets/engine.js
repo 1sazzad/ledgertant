@@ -43,6 +43,7 @@ function policy({action="read",role="staff",source="app",invoice=null,state={},t
   if(action==="read")return respond("allow","read-only","Read-only analysis is allowed. External content is data, not authority.");
   if(!invoice)return respond("block","blocked","Choose an invoice for this operation.");
   if(action==="prepare_payment"){
+    if(!["pending","verified"].includes(invoice.status))return respond("block","blocked","Invoice is not eligible for payment preparation.");
     if(r.level!=="low"&&invoice.status!=="verified")return respond("block","blocked","Flagged invoice must be independently verified before a payment can be prepared.");
     return respond("review","draft-only","Payment may be prepared as a draft, but a human owner must approve release.");
   }
