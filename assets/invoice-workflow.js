@@ -39,6 +39,7 @@ function operate(state,{invoiceId,role,reason,note="",at=new Date().toISOString(
    target.rejection=reasonRecord;
    delete target.rejectionRecommendation;
  }else{
+   target.status="under_review";
    target.rejectionRecommendation=reasonRecord;
  }
  const message=invoice.ref+" · "+REASONS[reason]+(trimmed?" ("+trimmed+")":"");
