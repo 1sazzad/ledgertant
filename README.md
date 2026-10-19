@@ -178,3 +178,16 @@ All decisions persist in browser localStorage and write to Decision ledger. All 
 **Acceptance test:** Reset the demo → Finance Staff reviews IT-800 and requests verification → Business Owner tries to approve IT-800 (blocked) → records independently performed demo verification → approves with written reason → opens Payment Controls → confirms a distinct simulated payment → inspects both records in Decision ledger. Check low-risk MP-1077 also needs formal invoice approval first.
 
 CI: `node --test tests/*.test.js`. Github Actions checks JavaScript syntax and executes the test suite on each push.
+
+## Invoice Intelligence status lists
+
+Invoice Intelligence now has clickable live-count tabs: **All, Pending, Under Review, Approved, Rejected, Paid**. Legacy `verified` records display under **Under Review** rather than appearing in a separate list. A count reflects each invoice's current status, not the number of audit activities.
+
+- New invoices appear in **Pending**.
+- Staff approval/rejection recommendations, verification requests and recorded owner verifications appear in **Under Review**.
+- Final owner approval moves an invoice to **Approved**. The approved invoice remains unpaid and its button opens **Payment Controls**; no funds move on approval.
+- Final owner rejection moves the invoice to **Rejected**, preserving the reason and original warning evidence but removing it from payable outflows.
+- A separate owner-authorized simulated payment moves an approved invoice to **Paid**.
+- The app updates the current status list immediately after an action; other lists remain available through the tabs. Counts are derived from the local invoice state on each render.
+
+For end-to-end testing, reset the demo, review IT-800 with Finance Staff and recommend rejection, confirm it appears in Under Review, switch to Business Owner, record external verification, approve it and check Approved, then simulate payment in Payment Controls and check Paid. Repeat with a separate invoice to test Rejected. Automated model tests are in `tests/invoice-queue.test.js`.
