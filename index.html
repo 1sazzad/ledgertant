@@ -25,7 +25,25 @@
 .detail-box{width:min(680px,100%);max-height:90vh;overflow:auto;background:#13273d;border:1px solid #5a8194;border-radius:19px;padding:25px;box-shadow:0 22px 80px #000a}
 .detail-box h2{margin:5px 0 15px}.detail-box .close{float:right}
 @media(max-width:850px){.guide-grid{grid-template-columns:1fr}.decision-row{align-items:stretch}}
-</style><link rel="stylesheet" href="./assets/responsive.css?v=mobile-menu-2"></head>
+
+/* Stable KPI cards: critical CSS inline, not dependent on cache */
+.kpi-grid{align-items:stretch}
+.kpi-grid>.kpi-button{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:0;width:100%;min-width:0;min-height:164px;text-align:left;background:#111f33;color:#e8edf6;cursor:pointer;padding:21px;border:1px solid #2d425c;overflow:hidden;white-space:normal}
+.kpi-grid>.kpi-button:hover,.kpi-grid>.kpi-button:focus-visible{border-color:#65e5bd;background:#162b40;outline-offset:2px}
+.kpi-title{display:block;color:#a6b7cb;font-size:13px;line-height:1.35}
+.kpi-value{display:block;color:#eef4fc;font-size:clamp(23px,2.5vw,31px);font-weight:780;line-height:1.23;letter-spacing:-.7px;margin:9px 0 5px;overflow-wrap:anywhere}
+.kpi-value.danger{color:#fc8d9c}
+.kpi-value.positive{color:#71e3b9}
+.kpi-description{display:block;color:#9db4c8;font-size:12px;line-height:1.4;margin-bottom:8px}
+.kpi-action{display:block;margin-top:auto;padding-top:7px;color:#72e4c1;font-size:12px;font-weight:750}
+.kpi-dialog-list{max-height:min(56dvh,510px);overflow-y:auto;overscroll-behavior:contain;padding-right:5px;line-height:1.5}
+.kpi-dialog-list p{color:#c0d0de}
+.kpi-dialog-list .kpi-entry{display:flex;flex-direction:column;gap:3px;padding:10px 0;border-bottom:1px solid #365065;overflow-wrap:anywhere}
+.kpi-dialog-list .kpi-entry strong{font-size:14px}
+.kpi-dialog-list .kpi-entry span{color:#dcf2fa;font-size:12px}
+.kpi-dialog-list .kpi-entry small{color:#a8bfd0;font-size:12px}
+@media(max-width:640px){.kpi-grid>.kpi-button{min-height:136px;padding:17px}.kpi-value{font-size:27px}.kpi-dialog{max-width:100%;max-height:89dvh;overflow-y:auto}.kpi-dialog .decision-row{display:grid;grid-template-columns:1fr}}
+</style><link rel="stylesheet" href="./assets/responsive.css?v=kpi-clean-20261019"></head>
 <body><div class="shell"><aside class="side"><div class="brand-row"><div class="brand">ledger<i>tant</i>.</div><button id="mobileMenuToggle" class="mobile-menu-toggle" type="button" aria-controls="menu" aria-expanded="false" aria-label="Open navigation menu"><span class="mobile-menu-glyph" aria-hidden="true">☰</span><span>Menu</span></button></div><div class="small">Your SME finance control tower</div><nav class="menu" id="menu" aria-label="Main sections"></nav><div class="side-bottom"><div class="demo">● OFFLINE DEMO MODE</div><div class="small">Synthetic data • Browser-only storage<br>No live banking integration</div></div></aside><main class="main"><div class="top"><div><h1 id="pageTitle">Command center</h1><div class="muted" id="pageSubtitle">Make confident financial decisions.</div></div><div class="toolbar"><span class="pill" id="scenarioBadge">🇧🇩 BDT · Synthetic SME</span><button class="btn outline" id="reset">Reset demo</button></div></div><div class="section view active" id="overview"></div><div class="section view" id="journey"></div><div class="section view" id="invoices"></div><div class="section view" id="decisionlab"></div><div class="section view" id="cashflow"></div><div class="section view" id="financing"></div><div class="section view" id="payments"></div><div class="section view" id="copilot"></div><div class="section view" id="audit"></div><div class="section view" id="security"></div><div class="foot">Ledgertant competition prototype • Outputs are deterministic simulations, not professional financial advice or completed payments.</div></main></div><div id="decisionRoot"></div><script src="./assets/engine.js"></script><script src="./assets/journey-core.js"></script><script src="./assets/decision-core.js"></script><script src="./assets/decision-lab-core.js"></script><script src="./assets/overview-insights.js"></script><script>
 "use strict";
 const initial=()=>({balance:425000,weeklyIncome:175000,weeklyOperating:110000,role:"owner",suppliers:[{name:"Bright Supply Co",bank:"BD18-101-7788",typical:42000},{name:"Metro Packaging",bank:"BD32-204-9921",typical:55000},{name:"Cloudbridge IT",bank:"BD57-340-1002",typical:15000}],invoices:[{id:1,ref:"BS-2401",supplier:"Bright Supply Co",amount:42500,bank:"BD18-101-7788",due:1,status:"pending"},{id:2,ref:"MP-1077",supplier:"Metro Packaging",amount:55200,bank:"BD32-204-9921",due:2,status:"pending"},{id:3,ref:"BS-2401",supplier:"Bright Supply Co",amount:42500,bank:"BD18-101-7788",due:3,status:"pending"},{id:4,ref:"IT-800",supplier:"Cloudbridge IT",amount:14900,bank:"BD90-009-7777",due:1,status:"pending"},{id:5,ref:"MP-1078",supplier:"Metro Packaging",amount:184000,bank:"BD32-204-9921",due:2,status:"pending"},{id:6,ref:"NS-882",supplier:"Nova Wholesale",amount:78000,bank:"BD55-333-8111",due:4,status:"pending"}],audit:[],nextId:7});
@@ -54,9 +72,9 @@ const kpiContents=(kind,data)=>{
  return '<p>Lowest expected balance: '+money(data.baseLow)+' in week '+data.baseLowWeek+'. With sales down 35%, the lowest projected balance is '+money(data.stressLow)+'.</p><p>Forecasts are illustrative and do not predict real market conditions.</p>';
 };
 const kpiMeta={cash:["Available cash","overview"],invoices:["Unpaid invoices","invoices"],risk:["Risk alerts","invoices"],forecast:["Minimum projected cash","cashflow"]};
-const kpiCard=(kind,value,detail,klass,data)=>{
- const name=kpiMeta[kind][0],preview=kpiContents(kind,data);
- return '<div class="kpi-wrap"><button type="button" class="card kpi-button" data-kpi="'+kind+'" aria-label="'+name+' — show details"><span class="muted">'+name+'</span><span class="metric '+klass+'">'+value+'</span><span class="small">'+detail+'</span><span class="kpi-hint">View details ↗</span></button><div class="kpi-peek" aria-hidden="true"><strong>'+name+'</strong><div class="kpi-peek-body">'+preview+'</div><span class="kpi-peek-footer">Click to explore the full details</span></div></div>';
+const kpiCard=(kind,value,detail,klass)=>{
+ const name=kpiMeta[kind][0];
+ return '<button type="button" class="card kpi-button" data-kpi="'+kind+'" aria-label="'+name+' — view details"><span class="kpi-title">'+name+'</span><strong class="kpi-value '+klass+'">'+value+'</strong><span class="kpi-description">'+detail+'</span><span class="kpi-action">View details <span aria-hidden="true">↗</span></span></button>';
 };
 const summary=()=>{
  const d=kpiInfo();
