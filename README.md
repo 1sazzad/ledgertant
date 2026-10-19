@@ -146,3 +146,18 @@ Technical pieces:
 ### Evidence and limitations
 
 No claim is made of measured fraud prevention, saved funds, bank integrations, a live LLM, validated credit offers, enforcement-grade authorization, or immutable audit history. Any real implementation would require server-side identity, strong approvals, supplier verification, licensed payments, user consent, model evaluation and appropriate jurisdictional compliance.
+
+## Demo workflow update: Owner/Staff and invoice rejection (October 2026)
+
+A visible **Demo role** switcher in the header now chooses **Business Owner** or **Finance Staff** and persists the simulated role in browser storage. This is a role-play permission demo and not identity verification or secure production access.
+
+From **Invoice intelligence** or **Payment controls**, open an unpaid invoice. A Finance Staff actor can **Recommend rejection** with a reason; the invoice remains unpaid/payable until an Owner decides. The Business Owner may **Reject invoice** with a required reason selection (Duplicate, Incorrect bank details, Incorrect amount or Other; Other requires a written note). Confirming sets the status to \`rejected\`, records an audit event, and prevents payment. Rejected invoices remain visible through the **Status → Rejected** invoice filter and still retain their original warning evidence. They are excluded from future payment outflows in the eight-week forecast; there is no cash deduction for rejection.
+
+### Rejection acceptance test
+1. Reset demo; choose Finance Staff in the header and review \`IT-800\`. Use **Recommend rejection** with the incorrect-bank-details reason.
+2. Check that the invoice remains unpaid, available in the queue, and a recommendation appears in Decision ledger.
+3. Choose Business Owner and review \`IT-800\`. Select **Reject invoice**, choose Incorrect supplier bank details and confirm.
+4. Check the **Rejected** filter, inspect the reason and original warning, verify the invoice disappears from payment-eligible items, and confirm that the forecast no longer includes its payable outflow.
+5. Check Decision ledger for the dated owner rejection entry. No bank transfer occurs.
+
+Tests: \`node --test tests/*.test.js\` including \`tests/invoice-workflow.test.js\`, with GitHub Actions invoking tests after a push. The app remains fully static and client-side.
