@@ -182,3 +182,8 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 }
 @media(max-width:900px){.kpi-peek{display:none!important}}
 @media(prefers-reduced-motion:reduce){.kpi-button{transition:none}.kpi-button:hover{transform:none}}
+
+/* Guided-action feedback and a clear primary walkthrough control */
+.tour-action{display:block;width:100%;margin:0 0 14px;padding:12px 14px;background:#61e7bf;color:#092b26;font-weight:800}
+.tour-action-feedback{position:fixed;z-index:160;top:18px;left:50%;transform:translateX(-50%);width:min(480px,calc(100% - 28px));padding:13px 17px;border-radius:12px;background:#204b45;border:1px solid #78e9cb;color:#f2fff9;box-shadow:0 14px 40px #000a;font-size:13px;pointer-events:none}
+@media(max-width:640px){.tour-action-feedback{top:auto;bottom:94px}}
