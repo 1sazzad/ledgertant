@@ -67,3 +67,31 @@ test("all payment summary and confirm surfaces are wired into page",()=>{
  for(const term of ["paymentBalanceDashboard","paymentConfirmRoot","paymentConfirmDialog","data-confirm-payment","data-cancel-payment","LedgertantPaymentLedger.settle","Payment history"])
   assert.ok(html.includes(term),"Missing "+term);
 });
+
+test("eligibility reports actual insufficient-cash shortfall without moving money",()=>{
+ const s=sample(10000),before=JSON.stringify(s);
+ const result=L.eligibility(s,2,"owner",E);
+ assert.equal(result.code,"cash");
+ assert.equal(result.shortfall,45200);
+ assert.equal(result.allowed,false);
+ assert.match(result.detail,/No cash has been deducted/);
+ assert.equal(JSON.stringify(s),before);
+});
+test("history separates success from payment blocks and preserves full activity",()=>{
+ const entries=[
+ {type:"BLOCKED PAYMENT",message:"MP-1077 · Insufficient funds"},
+ {type:"SIMULATED PAYMENT",message:"MP-1077 settled",amount:55200},
+ {type:"DEMO PIN DENIED",message:"Simulated payment MP-1077 · Demo PIN was incorrect."},
+ {type:"ROLE CHANGE",message:"Finance Staff selected"}
+ ];
+ const h=L.history(entries);
+ assert.deepEqual(h.completed.map(x=>x.index),[1]);
+ assert.deepEqual(h.blocked.map(x=>x.index),[0,2]);
+ assert.equal(h.all.length,4);
+ assert.equal(h.completed[0].event.type,"SIMULATED PAYMENT");
+});
+test("payment blocking and audit filters are visible in application source",()=>{
+ const html=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
+ for(const key of ["payment-warning","data-audit-tab","Successful payments","Blocked attempts","Shortfall:","paymentBalanceDashboard"])
+  assert.ok(html.includes(key),"Missing "+key);
+});
