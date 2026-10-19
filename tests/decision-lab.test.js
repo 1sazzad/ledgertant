@@ -4,7 +4,7 @@ require("../assets/engine.js");
 require("../assets/decision-core.js");
 require("../assets/decision-lab-core.js");
 const E=globalThis.LedgertantEngine,D=globalThis.LedgertantDecision,L=globalThis.LedgertantDecisionLabCore;
-const make=()=>({balance:200000,weeklyIncome:50000,weeklyOperating:30000,role:"owner",suppliers:[{name:"Supplier A",bank:"KNOWN",typical:30000}],invoices:[{id:1,ref:"A-1",supplier:"Supplier A",bank:"KNOWN",amount:60000,due:2,status:"pending"}]});
+const make=()=>({balance:200000,weeklyIncome:50000,weeklyOperating:30000,role:"owner",suppliers:[{name:"Supplier A",bank:"KNOWN",typical:30000}],invoices:[{id:1,ref:"A-1",supplier:"Supplier A",bank:"KNOWN",amount:60000,due:2,status:"approved"}]});
 test("three payment timing cases",()=>assert.deepEqual(L.evaluate(make(),1,E,D).cases.map(x=>x.id),["now","due","defer"]));
 test("changing scenarios never mutates input",()=>{const s=make(),before=JSON.stringify(s);L.evaluate(s,1,E,D,{mode:"stress"});assert.equal(JSON.stringify(s),before)});
 test("pay now reduces current cash, not the scheduled week again",()=>{const r=L.evaluate(make(),1,E,D);assert.equal(r.cases[0].startingCash,140000);assert.equal(r.cases[0].path[1].balance,180000)});
