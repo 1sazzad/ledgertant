@@ -156,3 +156,29 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 @media(max-height:520px) and (max-width:900px){
   .side .menu{max-height:48dvh}
 }
+
+
+/* Notification-style KPI summaries. Accessible by click/tap and keyboard. */
+.kpi-wrap{min-width:0;position:relative}
+.kpi-button{width:100%;height:100%;min-height:165px;text-align:left;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:4px;cursor:pointer;transition:border-color .15s ease,transform .15s ease;background:#111f33;color:#e8edf6}
+.kpi-button .metric{display:block;margin:4px 0;font-size:clamp(22px,2.25vw,29px)}
+.kpi-button:hover,.kpi-button:focus-visible{border-color:#6be7c3;transform:translateY(-2px)}
+.kpi-hint{font-size:11px;color:#78e7c8;margin-top:8px;font-weight:700}
+.kpi-peek{display:none;position:absolute;left:0;top:calc(100% + 8px);width:min(360px,calc(100vw - 36px));z-index:40;padding:17px;background:#193249;border:1px solid #69bdaa;border-radius:16px;box-shadow:0 18px 48px #000a;pointer-events:none}
+.kpi-wrap:nth-child(3) .kpi-peek,.kpi-wrap:nth-child(4) .kpi-peek{left:auto;right:0}
+.kpi-peek:before{content:"";position:absolute;top:-7px;left:20px;width:12px;height:12px;transform:rotate(45deg);background:#193249;border-top:1px solid #69bdaa;border-left:1px solid #69bdaa}
+.kpi-wrap:nth-child(3) .kpi-peek:before,.kpi-wrap:nth-child(4) .kpi-peek:before{left:auto;right:20px}
+.kpi-peek-body{max-height:195px;overflow:hidden;mask-image:linear-gradient(#000 77%,transparent)}
+.kpi-peek p,.kpi-dialog-list p{color:#bfd1e1;font-size:13px}
+.kpi-entry{padding:9px 0;border-bottom:1px solid #365065;display:grid;gap:2px}
+.kpi-entry strong{font-size:13px;overflow-wrap:anywhere}
+.kpi-entry span{font-size:12px;color:#e3f4fd}
+.kpi-entry small{color:#a8bfd0;font-size:11px}
+.kpi-peek-footer{display:block;margin-top:8px;color:#8ce7c9;font-size:11px;font-weight:700}
+.kpi-dialog-list{max-height:min(57dvh,510px);overflow-y:auto;overscroll-behavior:contain;padding-right:5px}
+.kpi-dialog .decision-row{margin-top:20px}
+@media(hover:hover) and (pointer:fine) and (min-width:901px){
+.kpi-wrap:hover .kpi-peek,.kpi-wrap:focus-within .kpi-peek{display:block}
+}
+@media(max-width:900px){.kpi-peek{display:none!important}}
+@media(prefers-reduced-motion:reduce){.kpi-button{transition:none}.kpi-button:hover{transform:none}}
