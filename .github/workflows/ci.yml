@@ -23,6 +23,7 @@ jobs:
           node --check assets/experience.js
           node --check assets/invoice-workflow.js
           node --check assets/decision-lab-core.js
+          node --check assets/decision-lab-ux.js
           node --check assets/overview-insights.js
           node --check assets/tour-actions.js
           node --check assets/mobile-nav.js
