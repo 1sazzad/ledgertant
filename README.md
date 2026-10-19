@@ -201,3 +201,13 @@ For end-to-end testing, reset the demo, review IT-800 with Finance Staff and rec
 **Test 7.2 — Owner payment:** Switch to Business Owner with 1234. Open Payment Controls, find approved MP-1077 and select payment eligibility. The simulated payment confirmation requests its own PIN. Incorrect PIN must leave the invoice Approved and the balance unchanged. Enter 1234 and confirm the subsequent simulated payment prompt. The invoice appears under Paid and its actions appear in Decision ledger.
 
 Cancellation does not change the role or invoice. Audit records show accepted and denied demonstration PIN attempts, but never the PIN itself. This client-side feature does not provide secure access control for actual funds.
+
+## Payment balance dashboard and confirmation — Test 7.3 and Test 7.4
+
+**Payment Controls** now displays the current synthetic BDT cash balance prominently, the number/value of approved invoices, an illustrative remaining balance if all approved invoices were paid, and a link to payment history after the first simulated payment.
+
+**Test 7.3 — successful simulated payment:** Reset demo; switch to Business Owner (demo PIN 1234 after switching from Finance Staff if applicable). In Invoice Intelligence, approve low-risk MP-1077 with an explanation and confirmation. In Payment Controls, check cash before payment (BDT 425,000). Open its Payment review and select Confirm owner simulation; enter demo PIN 1234. The subsequent final breakdown must show BDT 425,000 before, BDT 55,200 to deduct, BDT 369,800 afterward. Cancel leaves the balance and Approved invoice unchanged. If confirmed, a receipt shows these amounts; Payment Controls updates to BDT 369,800; the invoice moves to Paid, and Decision Ledger records the before/after amounts. No bank transfer occurs.
+
+**Test 7.4 — insufficient funds:** Reset demo, approve MP-1077 in Invoice Intelligence first, then use Cash-flow studio to set opening cash to BDT 10,000. Return to Payment Controls and open MP-1077. Attempt to authorize a simulated payment. It must be blocked with insufficient-funds feedback, the invoice must remain Approved, the balance must remain BDT 10,000, and an audit event must record the block. Do not look for the unapproved invoice in the Payment queue directly after Reset, because that queue intentionally lists only Approved invoices.
+
+The final payment simulation re-checks owner role, invoice approval, configured risk warnings and cash sufficiency before deducting funds. All calculations and records are synthetic, held in browser local storage, and are not a substitute for authenticated payment processing.
