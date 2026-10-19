@@ -20,13 +20,13 @@ function makeScenario(base,kind){
   return next;
 }
 function impact(state,engine){
-  const waiting=(state.invoices||[]).filter(i=>i.status==="pending");
+  const waiting=(state.invoices||[]).filter(i=>["pending","verified"].includes(i.status));
   const flags=waiting.map(i=>({invoice:i,risk:engine.scoreInvoice(i,state.invoices,state.suppliers)})).filter(v=>v.risk.score>=30);
   const high=flags.filter(v=>v.risk.level==="high");
   // Deduplicate by supplier + reference, retaining one legitimate reference as baseline.
   const seen=new Set();let repeatExposure=0,duplicates=0;
   for(const inv of state.invoices||[]){
-    if(inv.status==="paid")continue;
+    if(["paid","rejected"].includes(inv.status))continue;
     const k=String(inv.supplier).toLowerCase().trim()+"|"+String(inv.ref).toLowerCase().trim();
     if(seen.has(k)){repeatExposure+=Number(inv.amount)||0;duplicates++;}
     else seen.add(k);
