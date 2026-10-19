@@ -20,7 +20,7 @@ function makeScenario(base,kind){
   return next;
 }
 function impact(state,engine){
-  const waiting=(state.invoices||[]).filter(i=>["pending","verified"].includes(i.status));
+  const waiting=(state.invoices||[]).filter(i=>["pending","under_review","verified","approved"].includes(i.status));
   const flags=waiting.map(i=>({invoice:i,risk:engine.scoreInvoice(i,state.invoices,state.suppliers)})).filter(v=>v.risk.score>=30);
   const high=flags.filter(v=>v.risk.level==="high");
   // Deduplicate by supplier + reference, retaining one legitimate reference as baseline.
