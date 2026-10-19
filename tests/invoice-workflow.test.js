@@ -19,7 +19,7 @@ test("owner rejects changed-bank invoice with reason and immutable original",()=
 test("staff cannot finally reject",()=>assert.throws(()=>W.reject(make(),args("staff")),/Only the business owner/));
 test("staff can recommend without making the invoice unpayable",()=>{
  const r=W.recommend(make(),args("staff"));
- assert.equal(r.invoices[0].status,"pending");
+ assert.equal(r.invoices[0].status,"under_review");
  assert.equal(r.invoices[0].rejectionRecommendation.label,"Incorrect supplier bank details");
  assert.equal(r.audit[0].type,"REJECTION RECOMMENDED");
 });
