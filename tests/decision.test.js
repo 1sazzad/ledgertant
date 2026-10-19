@@ -10,10 +10,10 @@ const bad={id:2,ref:"AC-101",supplier:"Acme",bank:"REDIRECT",amount:10000,due:1,
 const state=(role="owner",cash=100000)=>({balance:cash,weeklyIncome:30000,weeklyOperating:10000,suppliers:[supplier],invoices:[{...good},{...bad}],role,audit:[]});
 test("unverified changed-bank invoice is HOLD",()=>assert.equal(D.assess(bad,state(),E).key,"verify"));
 test("a flagged invoice is not silently verified by staff",()=>assert.equal(D.assess(bad,state("staff"),E).canVerify,false));
-test("verified flag does not erase warning",()=>{const x={...bad,status:"verified"},s=state();s.invoices[1]=x;const a=D.assess(x,s,E);assert.equal(a.riskLevel,"medium");assert.equal(a.canSimulate,true)});
+test("verified flag does not erase warning",()=>{const x={...bad,status:"verified"},s=state();s.invoices[1]=x;const a=D.assess(x,s,E);assert.equal(a.riskLevel,"medium");assert.equal(a.canSimulate,false)});
 test("insufficient funds blocks simulation",()=>assert.equal(D.assess(good,state("owner",100),E).key,"cash"));
-test("staff must request owner action",()=>assert.equal(D.assess(good,state("staff"),E).key,"owner"));
-test("eligible owner sees advisory, not unconditional pay order",()=>{const a=D.assess(good,state(),E);assert.equal(a.key,"ready");assert.match(a.summary,/owner|buffer/i)});
+test("staff must request owner action",()=>assert.equal(D.assess({...good,status:"approved"},state("staff"),E).key,"owner"));
+test("eligible owner sees advisory, not unconditional pay order",()=>{const a=D.assess({...good,status:"approved"},state(),E);assert.equal(a.key,"ready");assert.match(a.summary,/owner|buffer/i)});
 test("paid invoice has no further action",()=>assert.equal(D.assess({...good,status:"paid"},state(),E).canSimulate,false));
 test("verified unpaid invoice remains forecast outflow",()=>{const s=state();s.invoices[0].status="verified";assert.equal(E.forecast(s)[1].invoiceOut,10000)});
 test("assessment never edits its inputs",()=>{const s=state(),before=JSON.stringify(s);D.assess(bad,s,E);assert.equal(JSON.stringify(s),before)});
