@@ -41,11 +41,11 @@ function run(key,doc=root.document){
    return result(ok,ok?"Unsafe instruction evaluated. Expected verdict: BLOCK. No payment is executed.":"Security policy could not be evaluated.",get("#policyVerdict"));
   }
   case "payments":{
-   const role=get("#role");
+   const role=get("#globalRole");
    if(!role)return result(false,"Payment role selector is unavailable.");
    change(role,"staff");
    const ok=press('#payments [data-decision="2"]')||press('#payments [data-decision]');
-   return result(ok,ok?"Staff payment decision opened. Expected: OWNER APPROVAL REQUIRED; no payment is executed.":"No unpaid invoice is available for this payment review.",get('#decisionRoot .detail-box'));
+   return result(ok,ok?"Invoice approval and staff permissions shown. No simulated payment is executed.":"No unpaid invoice is available for this payment review.",get('#decisionRoot .detail-box'));
   }
   case "audit":{
    const ok=press("#audit [data-audit]");
