@@ -161,3 +161,20 @@ From **Invoice intelligence** or **Payment controls**, open an unpaid invoice. A
 5. Check Decision ledger for the dated owner rejection entry. No bank transfer occurs.
 
 Tests: \`node --test tests/*.test.js\` including \`tests/invoice-workflow.test.js\`, with GitHub Actions invoking tests after a push. The app remains fully static and client-side.
+
+## Invoice Decision Center — formal approval before payment (October 2026)
+
+The user journey is now **screen invoice → review → request verification / recommend → owner approve or reject → payment controls → explicit owner payment confirmation → audit**.
+
+1. Start in **Invoice intelligence**, select an invoice and click **Review**.
+2. **Finance Staff** may recommend approval/rejection or request verification. These actions are advisory, not final decisions.
+3. **Business Owner** may request verification, record a fictional external-verification attestation with an explanation, approve an invoice with an approval reason and checkbox, or reject it with a reason.
+4. High-risk/medium-risk invoices **cannot be approved without an owner verification record**. Prior legacy `verified` status is not by itself sufficient.
+5. An approved invoice remains financially outstanding; **invoice approval does not deduct cash or execute a payment**. The payment screen only lists invoices with `approved` status and requires a separate explicit owner authorization.
+6. Rejected or paid invoices are ineligible for another release. Rejected entries retain risk evidence and are excluded from future invoice cash outflows.
+
+All decisions persist in browser localStorage and write to Decision ledger. All roles, attestations, and financial transactions are local synthetic demonstrations, not authenticated enterprise authorization, live identity verification, or bank transfers.
+
+**Acceptance test:** Reset the demo → Finance Staff reviews IT-800 and requests verification → Business Owner tries to approve IT-800 (blocked) → records independently performed demo verification → approves with written reason → opens Payment Controls → confirms a distinct simulated payment → inspects both records in Decision ledger. Check low-risk MP-1077 also needs formal invoice approval first.
+
+CI: `node --test tests/*.test.js`. Github Actions checks JavaScript syntax and executes the test suite on each push.
