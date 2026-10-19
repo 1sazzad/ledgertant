@@ -37,7 +37,7 @@ test("authorization never mutates invoice and cannot make bank transfer",()=>{
 const fs=require("node:fs"),path=require("node:path");
 const html=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
 test("UI has a dedicated PIN form and masked input for both flows",()=>{
- for(const needle of ["demoPinRoot","demoPinForm","type=\"password\"","inputmode=\"numeric\"","DEMO PIN","LedgertantDemoPIN.validate"])
+ for(const needle of ["demoPinRoot","demoPinForm","type=\"password\"","inputmode=\"numeric\"","Demo PIN:","LedgertantDemoPIN.validate"])
   assert.ok(html.includes(needle),"Missing "+needle);
 });
 test("PIN cannot appear in logged audit messages",()=>{
