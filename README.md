@@ -217,3 +217,15 @@ The final payment simulation re-checks owner role, invoice approval, configured 
 **Test 7.4 (revised):** Reset demo. In Invoice Intelligence, select Business Owner and approve the low-risk invoice MP-1077. Then go to Cash-flow studio and reduce opening cash to BDT 10,000. Return to Payment Controls; MP-1077 remains in the approved payment queue, but a warning explains that cash is insufficient. Click **Payment review**: the detail panel must show **Available BDT 10,000; invoice BDT 55,200; shortfall BDT 45,200** and explain why confirmation is unavailable. If an owner tries to release the payment, it remains blocked. Verify that cash stays BDT 10,000, the invoice stays Approved, and **no successful payment** appears.
 
 **Decision Ledger** now separates **Successful payments** from **Blocked attempts** and **All activity**. A failed attempt is allowed in Blocked attempts as an audit trail, but it is never called a completed payment. Successful payments appear only after confirmation and an actual local ledger update. Both sections reflect browser-only synthetic data; no external transfer is performed.
+
+## Owner Security Settings — Phase 8 acceptance test
+
+Security Lab now has a **Owner Security Settings** panel, independent from the policy simulator. The page-header **Demo role** must be Business Owner to edit these preferences. Finance Staff sees the settings but cannot save them.
+
+**Test 8.1 — Staff privileges:** Reset the demo, choose Finance Staff, open Security Lab, set actor Finance Staff / Release payment / Trusted app / MP-1077 and evaluate. It must return **BLOCK**; optional settings never permit staff payments.
+
+**Test 8.2 — Suspicious instructions:** In Security Lab use **Insert example attack** and evaluate. It must return **BLOCK** and explain why untrusted instructions are not permitted to control payments.
+
+**Test 8.3 — Owner settings:** Select Business Owner (enter demo PIN 1234 when switching from Staff), open Security Lab, adjust Additional security alerts, Invoice review reminders, and a review reminder threshold of 30 / 50 / 70. Click **Verify PIN and save settings**, enter a wrong PIN first and verify no changes saved, then enter 1234. Successful save updates the panel status and creates **SECURITY SETTINGS UPDATED** in Decision Ledger, but does not store the entered PIN. Reload to confirm browser-local persistence. Finance Staff must not be able to save settings.
+
+These controls govern only optional demonstration alerts and reminders. **Noneditable safeguards** include owner-only payment release, independent verification for flagged invoices, payment blocks for rejected/unapproved invoices, supplier bank changes, and untrusted instruction isolation. This is a client-side static demonstration and the public PIN is not secure identity verification.
