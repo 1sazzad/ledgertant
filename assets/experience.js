@@ -2,6 +2,7 @@
 (function(root){
 "use strict";
 let scenario="fraud",tourActive=false,tourIndex=0,tourFinished=false,expandedResult="",tourMinimized=false;
+let feedbackDismissTimer=null;
 const CORE=root.LedgertantJourney;
 if(!CORE)throw new Error("LedgertantJourney must be loaded first");
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -60,12 +61,37 @@ function renderBanner(){
  target.insertAdjacentHTML("afterbegin",'<div class="demo-mission"><div><span class="eyebrow">CURRENT DEMONSTRATION · FICTIONAL SME</span><h2>'+esc(info.name)+'</h2><p>'+esc(info.subtitle)+'</p><div class="mini-metrics"><span><b>'+m.flaggedCount+'</b> invoices need review</span><span><b>'+fmt(m.flaggedExposure)+'</b> flagged amount</span><span><b>'+fmt(m.stressLow)+'</b> stress-case cash floor</span></div></div><div class="mission-actions"><button class="btn" data-experience="start">▶ Guided walkthrough</button><button class="btn outline" data-experience="view" data-view="journey">Explore SME stories</button></div></div>');
  const badge=document.getElementById("scenarioBadge");if(badge)badge.textContent="Scenario: "+info.name;
 }
+function dismissFeedback(){
+ if(feedbackDismissTimer!==null){clearTimeout(feedbackDismissTimer);feedbackDismissTimer=null;}
+ document.getElementById("tourActionFeedback")?.remove();
+}
+function showFeedback(message){
+ dismissFeedback();
+ const toast=document.createElement("div");
+ toast.id="tourActionFeedback";
+ toast.className="tour-action-feedback";
+ toast.setAttribute("role","status");
+ toast.setAttribute("aria-live","polite");
+ const copy=document.createElement("span");
+ copy.className="tour-action-feedback-text";
+ copy.textContent=message;
+ const close=document.createElement("button");
+ close.type="button";
+ close.className="tour-action-feedback-close";
+ close.setAttribute("aria-label","Dismiss notification");
+ close.textContent="✕";
+ close.addEventListener("click",dismissFeedback);
+ toast.append(copy,close);
+ document.body.appendChild(toast);
+ feedbackDismissTimer=setTimeout(dismissFeedback,6000);
+}
+
 function ensureTour(){
  let el=document.getElementById("ledgertantTour");if(!el){el=document.createElement("aside");el.id="ledgertantTour";el.className="tour-panel";el.setAttribute("aria-label","Guided demonstration");document.body.appendChild(el)}return el;
 }
 function renderTour(){
  const el=ensureTour();
- if(!tourActive){document.getElementById("tourActionFeedback")?.remove();el.hidden=true;el.innerHTML="";el.classList.remove("tour-minimized");document.body.classList.remove("tour-running");return}
+ if(!tourActive){dismissFeedback();el.hidden=true;el.innerHTML="";el.classList.remove("tour-minimized");document.body.classList.remove("tour-running");return}
  const step=CORE.steps[tourIndex],count=CORE.steps.length;
  el.hidden=false;
  document.body.classList.add("tour-running");
@@ -100,17 +126,17 @@ document.addEventListener("click",event=>{
  const el=event.target.closest("[data-experience]");if(!el)return;
  const action=el.dataset.experience;
  if(action==="start"){tourMinimized=false;tourActive=true;tourIndex=0;tourFinished=false;navigate(CORE.steps[0].key);}
- else if(action==="next"){document.getElementById("tourActionFeedback")?.remove();if(tourIndex>=CORE.steps.length-1){tourActive=false;tourFinished=true;navigate("journey")}else{tourIndex++;navigate(CORE.steps[tourIndex].key)}}
+ else if(action==="next"){dismissFeedback();if(tourIndex>=CORE.steps.length-1){tourActive=false;tourFinished=true;navigate("journey")}else{tourIndex++;navigate(CORE.steps[tourIndex].key)}}
  else if(action==="try"){
   navigate(CORE.steps[tourIndex].key);
   const outcome=root.LedgertantTourActions?.run(CORE.steps[tourIndex].key);
   tourMinimized=true;renderTour();
-  if(outcome){const box=document.createElement("div");box.id="tourActionFeedback";box.className="tour-action-feedback";box.setAttribute("role","status");box.textContent=outcome.message;document.body.appendChild(box);const existing=document.querySelectorAll("#tourActionFeedback");existing.forEach((n,i)=>{if(i<existing.length-1)n.remove()});}
+  if(outcome)showFeedback(outcome.message);
   if(outcome?.target&&typeof outcome.target.scrollIntoView==="function"&&!outcome.target.closest(".detail-drawer"))outcome.target.scrollIntoView({behavior:"smooth",block:"center"});
  }
- else if(action==="prev"){document.getElementById("tourActionFeedback")?.remove();tourIndex=Math.max(0,tourIndex-1);navigate(CORE.steps[tourIndex].key)}
+ else if(action==="prev"){dismissFeedback();tourIndex=Math.max(0,tourIndex-1);navigate(CORE.steps[tourIndex].key)}
  else if(action==="close"){tourActive=false;renderTour()}
- else if(action==="minimize"){tourMinimized=!tourMinimized;document.getElementById("tourActionFeedback")?.remove();renderTour()}
+ else if(action==="minimize"){tourMinimized=!tourMinimized;dismissFeedback();renderTour()}
  else if(action==="scenario")chooseScenario(el.dataset.kind);
  else if(action==="view")navigate(el.dataset.view);
  else if(action==="report")downloadReport();
