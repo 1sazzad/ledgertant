@@ -38,5 +38,33 @@ function summary(state){
  return {balance:number(state.balance),approvedCount:approved.length,approvedAmount:amount,
    paidCount:paid.length,latest,remainingIfAllPaid:number(state.balance)-amount};
 }
-root.LedgertantPaymentLedger=Object.freeze({preview,settle,summary});
+
+/* Explain why an invoice is or is not ready to enter owner payment confirmation. */
+function eligibility(state,invoiceId,role,engine){
+ const p=preview(state,invoiceId);
+ const base={...p,allowed:false,shortfall:Math.max(0,p.amount-p.before)};
+ if(p.status!=="approved")return {...base,code:"approval",label:"Invoice approval required",detail:"Approve this invoice in Invoice Intelligence before payment authorization."};
+ if(!p.hasFunds)return {...base,code:"cash",label:"Payment blocked — insufficient funds",detail:"This invoice exceeds the available demo balance by "+Math.max(0,p.amount-p.before).toFixed(0)+" BDT. No cash has been deducted."};
+ if(role!=="owner")return {...base,code:"role",label:"Owner authorization required",detail:"Finance Staff can review an approved invoice but cannot authorize a simulated payment."};
+ if(!engine||typeof engine.policy!=="function")throw Error("Policy engine unavailable.");
+ const invoice=state.invoices.find(i=>Number(i.id)===Number(invoiceId));
+ const result=engine.policy({action:"release_payment",role,source:"app",invoice,state});
+ if(result.decision!=="review")return {...base,code:"risk",label:"Payment on hold",detail:result.reason||"Payment policy needs further review."};
+ return {...base,allowed:true,code:"ready",label:"Eligible for owner review",detail:"Invoice is approved and the demo balance covers it. A separate public demo PIN and explicit confirmation remain required."};
+}
+/* Payment history never mixes successful settlements with rejected payment attempts. */
+function history(audit=[]){
+ const all=Array.isArray(audit)?audit:[];
+ const completed=[],blocked=[];
+ for(let index=0;index<all.length;index++){
+  const event=all[index];if(!event)continue;
+  if(event.type==="SIMULATED PAYMENT")completed.push({index,event});
+  else if(event.type==="BLOCKED PAYMENT"||
+    (event.type==="DEMO PIN DENIED"&&String(event.message||"").startsWith("Simulated payment")))
+   blocked.push({index,event});
+ }
+ return {completed,blocked,all:all.map((event,index)=>({index,event}))};
+}
+
+root.LedgertantPaymentLedger=Object.freeze({preview,settle,summary,eligibility,history});
 })(globalThis);
