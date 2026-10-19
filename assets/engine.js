@@ -19,7 +19,7 @@ function forecast(state,mode="base"){
   let balance=number(state.balance);
   return Array.from({length:8},(_,ix)=>{
     const week=ix+1;
-    const invoiceOut=(state.invoices||[]).filter(i=>["pending","verified"].includes(i.status)&&number(i.due)===week).reduce((a,i)=>a+number(i.amount),0);
+    const invoiceOut=(state.invoices||[]).filter(i=>["pending","under_review","verified","approved"].includes(i.status)&&number(i.due)===week).reduce((a,i)=>a+number(i.amount),0);
     balance+=number(state.weeklyIncome)*factor-number(state.weeklyOperating)-invoiceOut;
     return {week,balance,invoiceOut};
   });
@@ -43,14 +43,14 @@ function policy({action="read",role="staff",source="app",invoice=null,state={},t
   if(action==="read")return respond("allow","read-only","Read-only analysis is allowed. External content is data, not authority.");
   if(!invoice)return respond("block","blocked","Choose an invoice for this operation.");
   if(action==="prepare_payment"){
-    if(!["pending","verified"].includes(invoice.status))return respond("block","blocked","Invoice is not eligible for payment preparation.");
-    if(r.level!=="low"&&invoice.status!=="verified")return respond("block","blocked","Flagged invoice must be independently verified before a payment can be prepared.");
+    if(!["pending","under_review","verified","approved"].includes(invoice.status))return respond("block","blocked","Invoice is not eligible for payment preparation.");
+    if(r.level!=="low"&&!invoice.verification?.attested)return respond("block","blocked","Flagged invoice requires recorded verification before a payment can be prepared.");
     return respond("review","draft-only","Payment may be prepared as a draft, but a human owner must approve release.");
   }
   if(action==="release_payment"){
     if(role!=="owner")return respond("block","blocked","Only an owner can approve a simulated payment.");
-    if(!["pending","verified"].includes(invoice.status))return respond("block","blocked","Invoice is not eligible for payment.");
-    if(r.level!=="low"&&invoice.status!=="verified")return respond("block","blocked","Suspicious invoice requires supplier verification before payment.");
+    if(invoice.status!=="approved")return respond("block","blocked","Invoice needs formal owner approval in Invoice Intelligence before payment.");
+    if(r.level!=="low"&&!invoice.verification?.attested)return respond("block","blocked","Suspicious invoice requires recorded owner verification before payment.");
     if(number(invoice.amount)>number(state.balance))return respond("block","blocked","Insufficient available demo cash.");
     return respond("review","human-approval","Eligible for a manual owner confirmation; policy never executes a payment automatically.");
   }
