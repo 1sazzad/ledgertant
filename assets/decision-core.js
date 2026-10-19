@@ -6,7 +6,8 @@ const minimum=a=>Math.min(...a.map(x=>x.balance));
 function assess(invoice,state,engine){
   if(!invoice||!state||!engine)throw new Error("Decision input missing");
   const risk=engine.scoreInvoice(invoice,state.invoices||[],state.suppliers||[]);
-  const unpaid=["pending","verified"].includes(invoice.status);
+  const unpaid=["pending","under_review","verified","approved"].includes(invoice.status);
+  const approved=invoice.status==="approved";
   const isFlagged=risk.level!=="low";
   const verified=invoice.status==="verified";
   const balance=amount(state.balance),value=amount(invoice.amount);
@@ -26,7 +27,11 @@ function assess(invoice,state,engine){
   }else if(!unpaid){
     key="unavailable";label="Payment unavailable";
     summary="This invoice is not in a payable demo state.";next="Review the invoice status.";
-  }else if(isFlagged&&!verified){
+  }else if(!approved){
+    key="invoice_approval";label="INVOICE APPROVAL REQUIRED";
+    summary="This invoice must be formally approved by the Business Owner in Invoice Intelligence before any payment.";
+    next="Open Invoice Intelligence, review warnings, record verification where required, and approve or reject this invoice.";
+  }else if(isFlagged&&!invoice.verification?.attested){
     key="verify";label="HOLD — do not pay yet";
     summary="Risk signals are unresolved. A business owner must perform independent supplier checks before any simulation can proceed.";
     next="Review the risk evidence, independently confirm invoice and payment details, then record a demo-only verification.";
@@ -45,12 +50,12 @@ function assess(invoice,state,engine){
   }
   return {
     key,label,summary,next,signals,riskScore:risk.score,riskLevel:risk.level,
-    flagged:isFlagged,verified,amount:value,balance,cashAfter,
-    baseFloor,stressFloor,canVerify:unpaid&&isFlagged&&!verified&&state.role==="owner",
+    flagged:isFlagged,verified,approved,amount:value,balance,cashAfter,
+    baseFloor,stressFloor,canVerify:unpaid&&!approved&&isFlagged&&!invoice.verification?.attested&&state.role==="owner",
     canSimulate:key==="ready",buffer:100000,dueWeek:invoice.due,
     role:state.role,
     steps:[
-      {name:"Supplier and invoice",ok:!isFlagged||verified,detail:isFlagged?(verified?"Demo verification recorded; underlying warning still visible.":"Warning signals need investigation."): "No configured risk rule triggered."},
+      {name:"Supplier and invoice",ok:!isFlagged||!!invoice.verification?.attested,detail:isFlagged?(invoice.verification?.attested?"Owner verification recorded; underlying warning still visible.":"Warning signals need investigation."): "No configured risk rule triggered."},
       {name:"Available funds",ok:value<=balance,detail:"Current demo cash after payment: "+cashAfter.toFixed(0)+" BDT."},
       {name:"Owner authorization",ok:state.role==="owner",detail:state.role==="owner"?"Owner simulation mode enabled.":"Staff may not release payments."},
       {name:"Human confirmation",ok:key==="completed",detail:key==="completed"?"Local payment marked as simulated.":"No payment is executed automatically."}
