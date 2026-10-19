@@ -8,7 +8,8 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 const fmt=n=>(n<0?"−৳":"৳")+Math.round(Math.abs(n)).toLocaleString("en-BD");
 function navigate(view){
   if(!document.getElementById(view))return;
-  current=view;render();
+  if(typeof root.LedgertantNavigate==="function")root.LedgertantNavigate(view);
+  else {current=view;render();}
   if(typeof window!=="undefined"&&window.scrollTo)window.scrollTo({top:0,behavior:"smooth"});
 }
 function metric(label,value,sub,kind=""){
