@@ -5,7 +5,7 @@ const number=n=>Number.isFinite(Number(n))?Number(n):0;
 function inspect(state,engine){
   if(!state||!engine)throw new Error("Missing demo data or calculation engine");
   const all=Array.isArray(state.invoices)?state.invoices:[];
-  const unpaid=all.filter(i=>i.status==="pending"||i.status==="verified");
+  const unpaid=all.filter(i=>["pending","under_review","verified","approved"].includes(i.status));
   const entries=unpaid.map(i=>{
     const r=engine.scoreInvoice(i,all,state.suppliers||[]);
     return {id:i.id,ref:String(i.ref),supplier:String(i.supplier),amount:number(i.amount),
