@@ -262,3 +262,25 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 .demo-pin-error[hidden]{display:none}
 #demoPinRoot:empty{display:none}
 @media(max-width:640px){.demo-pin-box{max-height:90dvh;width:100%;padding-bottom:max(20px,env(safe-area-inset-bottom))}}
+
+.payment-balance-board{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;margin:0 0 19px;padding:22px;background:linear-gradient(125deg,#143d43,#162b42);border:1px solid #488f87;border-radius:17px}
+.payment-balance-main>strong{display:block;font-size:clamp(29px,4.6vw,46px);font-weight:850;color:#9af5d6;margin:6px 0}
+.payment-balance-main p{font-size:12px;color:#b3cbd9;margin:0}
+.payment-balance-stats{display:grid;gap:12px}
+.payment-balance-stats>div{padding:11px 13px;border:1px solid #3d6b75;background:#112c39;border-radius:10px}
+.payment-balance-stats small{display:block;color:#adcad5;font-size:11px}
+.payment-balance-stats strong{font-size:17px;display:block;overflow-wrap:anywhere}
+.payment-latest{grid-column:1/-1;border-top:1px solid #416878;padding-top:14px}
+.payment-latest p{font-size:13px;color:#d7ede9}
+.payment-confirm-drawer{z-index:240}
+.payment-confirm-box{max-width:520px}
+.payment-receipt{margin:20px 0;padding:16px;background:#10283b;border:1px solid #3b6074;border-radius:13px;display:grid;gap:13px}
+.payment-receipt>div{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.payment-receipt span{color:#acc5d7}
+.payment-receipt strong{white-space:nowrap}
+.payment-receipt .payment-receipt-final{border-top:1px solid #446579;padding-top:15px}
+.payment-receipt-final strong{color:#85efd1;font-size:clamp(19px,3vw,25px)}
+.payment-deduction{color:#ffc0bc}
+.payment-confirm-actions{display:flex;flex-wrap:wrap;gap:9px}
+.payment-confirm-actions .btn{flex:1 1 170px}
+@media(max-width:720px){.payment-balance-board{grid-template-columns:minmax(0,1fr);padding:17px}.payment-latest{grid-column:1}.payment-receipt>div{align-items:flex-start;flex-direction:column;gap:4px}.payment-confirm-actions{flex-direction:column}.payment-confirm-actions .btn{width:100%}}
