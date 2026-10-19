@@ -284,3 +284,13 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 .payment-confirm-actions{display:flex;flex-wrap:wrap;gap:9px}
 .payment-confirm-actions .btn{flex:1 1 170px}
 @media(max-width:720px){.payment-balance-board{grid-template-columns:minmax(0,1fr);padding:17px}.payment-latest{grid-column:1}.payment-receipt>div{align-items:flex-start;flex-direction:column;gap:4px}.payment-confirm-actions{flex-direction:column}.payment-confirm-actions .btn{width:100%}}
+
+.payment-warning{background:#412934;border:1px solid #b96e80;color:#ffe2e1;padding:14px 17px;border-radius:12px;margin:14px 0}
+.payment-warning strong{display:block;font-size:15px}
+.payment-warning p{font-size:13px;margin:8px 0 0}
+.payment-history-tabs{display:flex;flex-wrap:wrap;gap:9px;margin:17px 0}
+.payment-history-tab{border:1px solid #35536c;background:#162b42;color:#d0e3f5;border-radius:10px;padding:10px 13px;min-height:44px}
+.payment-history-tab strong{margin-left:7px;background:#314d63;border-radius:20px;padding:3px 8px}
+.payment-history-tab.active{background:#245d54;border-color:#73dfba;color:#fff}
+.payment-history-empty{padding:24px;background:#15283b;border-radius:12px;color:#a9c6d7}
+@media(max-width:640px){.payment-history-tabs{display:grid;grid-template-columns:1fr 1fr}.payment-history-tab{font-size:12px}}
