@@ -21,7 +21,7 @@ function evaluate(state,invoiceId,engine,decisionEngine,opts={}){
     if(opt.id==="now"){
       next.balance=amount(next.balance)-amount(candidate.amount);
       candidate.status="paid";
-    }else if(opt.id==="defer"&&["pending","verified"].includes(candidate.status)){
+    }else if(opt.id==="defer"&&["pending","under_review","verified","approved"].includes(candidate.status)){
       candidate.due=amount(candidate.due)+2;
     }
     const series=engine.forecast(next,mode);
@@ -35,8 +35,12 @@ function evaluate(state,invoiceId,engine,decisionEngine,opts={}){
   });
   const now=cases[0],due=cases[1];
   let status="REVIEW TIMING",advice="Compare the simulated liquidity impact and confirm the contractual due date before approving.";
-  if(invoice.status==="paid"){
+  if(invoice.status==="rejected"){
+    status="REJECTED — NOT PAYABLE";advice="This invoice was rejected; hypothetical payment comparisons are informational only.";
+  }else if(invoice.status==="paid"){
     status="ALREADY RECORDED";advice="This is a previously simulated payment. Do not make another payment.";
+  }else if(decision.key==="invoice_approval"){
+    status="INVOICE APPROVAL REQUIRED";advice="First review and approve this invoice in Invoice Intelligence; all timing alternatives here are hypothetical.";
   }else if(decision.key==="verify"){
     status="HOLD — VERIFY FIRST";advice="Resolve invoice and bank-detail warnings independently. Timing scenarios are planning illustrations, not permission to pay.";
   }else if(decision.key==="cash"){
