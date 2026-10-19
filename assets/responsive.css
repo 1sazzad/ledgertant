@@ -187,3 +187,20 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 .tour-action{display:block;width:100%;margin:0 0 14px;padding:12px 14px;background:#61e7bf;color:#092b26;font-weight:800}
 .tour-action-feedback{position:fixed;z-index:160;top:18px;left:50%;transform:translateX(-50%);width:min(480px,calc(100% - 28px));padding:13px 17px;border-radius:12px;background:#204b45;border:1px solid #78e9cb;color:#f2fff9;box-shadow:0 14px 40px #000a;font-size:13px;pointer-events:none}
 @media(max-width:640px){.tour-action-feedback{top:auto;bottom:94px}}
+
+/* Dismissible walkthrough notification: does not cover the popup close button. */
+.tour-action-feedback{
+ display:flex;align-items:flex-start;justify-content:space-between;gap:13px;
+ top:auto;bottom:18px;padding:11px 10px 11px 16px;
+ pointer-events:auto;max-height:34dvh;overflow-y:auto;line-height:1.45;
+}
+.tour-action-feedback-text{flex:1;min-width:0;overflow-wrap:anywhere;align-self:center}
+.tour-action-feedback-close{
+ display:flex;align-items:center;justify-content:center;flex:0 0 38px;
+ width:38px;height:38px;min-height:38px;border:1px solid #7ecfbc;
+ border-radius:9px;background:#163e38;color:#f5fff9;font-size:17px;
+ font-weight:700;cursor:pointer;touch-action:manipulation;
+}
+.tour-action-feedback-close:hover{background:#2b6257}
+.tour-action-feedback-close:focus-visible{outline:3px solid #ddfff2;outline-offset:2px}
+@media(max-width:640px){.tour-action-feedback{top:12px;bottom:auto}}
