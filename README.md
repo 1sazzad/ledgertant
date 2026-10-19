@@ -191,3 +191,13 @@ Invoice Intelligence now has clickable live-count tabs: **All, Pending, Under Re
 - The app updates the current status list immediately after an action; other lists remain available through the tabs. Counts are derived from the local invoice state on each render.
 
 For end-to-end testing, reset the demo, review IT-800 with Finance Staff and recommend rejection, confirm it appears in Under Review, switch to Business Owner, record external verification, approve it and check Approved, then simulate payment in Payment Controls and check Paid. Repeat with a separate invoice to test Rejected. Automated model tests are in `tests/invoice-queue.test.js`.
+
+## Demo role PIN and payment confirmation — Test 7 update
+
+**Demo PIN: 1234.** This number is displayed publicly in the interface and is for illustrating workflow only, not real user authentication. Do not enter a personal or banking PIN.
+
+**Test 7.1 — Staff role:** Reset the demo. MP-1077 initially appears in Invoice Intelligence (Pending), not in Payment Controls. Choose Finance Staff and review the invoice; staff cannot finalize its approval. Attempt to change the header role to Business Owner. Enter an incorrect demo PIN: role stays Finance Staff. Enter 1234: Owner role activates. Approve the invoice in Invoice Intelligence. Switch back to Finance Staff and verify that staff cannot authorize its simulated payment.
+
+**Test 7.2 — Owner payment:** Switch to Business Owner with 1234. Open Payment Controls, find approved MP-1077 and select payment eligibility. The simulated payment confirmation requests its own PIN. Incorrect PIN must leave the invoice Approved and the balance unchanged. Enter 1234 and confirm the subsequent simulated payment prompt. The invoice appears under Paid and its actions appear in Decision ledger.
+
+Cancellation does not change the role or invoice. Audit records show accepted and denied demonstration PIN attempts, but never the PIN itself. This client-side feature does not provide secure access control for actual funds.
