@@ -65,7 +65,7 @@ function ensureTour(){
 }
 function renderTour(){
  const el=ensureTour();
- if(!tourActive){el.hidden=true;el.innerHTML="";el.classList.remove("tour-minimized");document.body.classList.remove("tour-running");return}
+ if(!tourActive){document.getElementById("tourActionFeedback")?.remove();el.hidden=true;el.innerHTML="";el.classList.remove("tour-minimized");document.body.classList.remove("tour-running");return}
  const step=CORE.steps[tourIndex],count=CORE.steps.length;
  el.hidden=false;
  document.body.classList.add("tour-running");
@@ -74,7 +74,7 @@ function renderTour(){
   el.innerHTML='<div class="tour-mini"><div><span class="tour-counter">GUIDED DEMO · STEP '+(tourIndex+1)+' / '+count+'</span><strong>'+esc(step.title)+'</strong></div><button class="btn secondary" data-experience="minimize">Expand ↑</button></div>';
   return;
  }
- el.innerHTML='<div class="tour-head"><span class="eyebrow">LIVE JUDGE WALKTHROUGH</span><div class="tour-head-actions"><button class="btn secondary" data-experience="minimize" aria-label="Minimize guided walkthrough">Minimize ↓</button><button aria-label="Close guided walkthrough" data-experience="close" class="close-tour">✕</button></div></div><div class="tour-progress" role="progressbar" aria-valuenow="'+(tourIndex+1)+'" aria-valuemin="1" aria-valuemax="'+count+'" aria-label="Tour step"><span style="width:'+Math.round((tourIndex+1)/count*100)+'%"></span></div><div class="tour-counter">STEP '+(tourIndex+1)+' OF '+count+'</div><h3>'+esc(step.title)+'</h3><p>'+esc(step.detail)+'</p><div class="notice">'+esc(tourIndex===4?'Action: set actor to Finance staff, choose Release payment, and evaluate. Expect BLOCK with an explanation.':tourIndex===5?'Action: open Should I pay? for a flagged invoice. HOLD means stop and verify. Owner confirmation is required even for eligible invoices.':tourIndex===6?'Action: inspect decision evidence, export the audit CSV and explore expandable result cards in Demo experience.':'Action: inspect this module and explain the evidence before continuing.')+'</div><button class="btn outline tour-open" data-experience="view" data-view="'+esc(step.key)+'">'+esc(step.action)+' ↗</button><div class="tour-footer"><button class="btn secondary" '+(tourIndex===0?"disabled":"")+' data-experience="prev">← Back</button><button class="btn" data-experience="next">'+(tourIndex===count-1?"Finish tour ✓":"Next step →")+'</button></div>';
+ el.innerHTML='<div class="tour-head"><span class="eyebrow">LIVE JUDGE WALKTHROUGH</span><div class="tour-head-actions"><button class="btn secondary" data-experience="minimize" aria-label="Minimize guided walkthrough">Minimize ↓</button><button aria-label="Close guided walkthrough" data-experience="close" class="close-tour">✕</button></div></div><div class="tour-progress" role="progressbar" aria-valuenow="'+(tourIndex+1)+'" aria-valuemin="1" aria-valuemax="'+count+'" aria-label="Tour step"><span style="width:'+Math.round((tourIndex+1)/count*100)+'%"></span></div><div class="tour-counter">STEP '+(tourIndex+1)+' OF '+count+'</div><h3>'+esc(step.title)+'</h3><p>'+esc(step.detail)+'</p><div class="notice">'+esc(tourIndex===4?'Action: set actor to Finance staff, choose Release payment, and evaluate. Expect BLOCK with an explanation.':tourIndex===5?'Action: open Should I pay? for a flagged invoice. HOLD means stop and verify. Owner confirmation is required even for eligible invoices.':tourIndex===6?'Action: inspect decision evidence, export the audit CSV and explore expandable result cards in Demo experience.':'Action: inspect this module and explain the evidence before continuing.')+'</div><button class="btn outline tour-open" data-experience="view" data-view="'+esc(step.key)+'">'+esc(step.action)+' ↗</button><button class="btn tour-action" data-experience="try">▶ Try this step for me</button><div class="tour-footer"><button class="btn secondary" '+(tourIndex===0?"disabled":"")+' data-experience="prev">← Back</button><button class="btn" data-experience="next">'+(tourIndex===count-1?"Finish tour ✓":"Next step →")+'</button></div>';
 }
 function render(){
  renderJourney();renderBanner();renderTour();
@@ -100,10 +100,17 @@ document.addEventListener("click",event=>{
  const el=event.target.closest("[data-experience]");if(!el)return;
  const action=el.dataset.experience;
  if(action==="start"){tourMinimized=false;tourActive=true;tourIndex=0;tourFinished=false;navigate(CORE.steps[0].key);}
- else if(action==="next"){if(tourIndex>=CORE.steps.length-1){tourActive=false;tourFinished=true;navigate("journey")}else{tourIndex++;navigate(CORE.steps[tourIndex].key)}}
- else if(action==="prev"){tourIndex=Math.max(0,tourIndex-1);navigate(CORE.steps[tourIndex].key)}
+ else if(action==="next"){document.getElementById("tourActionFeedback")?.remove();if(tourIndex>=CORE.steps.length-1){tourActive=false;tourFinished=true;navigate("journey")}else{tourIndex++;navigate(CORE.steps[tourIndex].key)}}
+ else if(action==="try"){
+  navigate(CORE.steps[tourIndex].key);
+  const outcome=root.LedgertantTourActions?.run(CORE.steps[tourIndex].key);
+  tourMinimized=true;renderTour();
+  if(outcome){const box=document.createElement("div");box.id="tourActionFeedback";box.className="tour-action-feedback";box.setAttribute("role","status");box.textContent=outcome.message;document.body.appendChild(box);const existing=document.querySelectorAll("#tourActionFeedback");existing.forEach((n,i)=>{if(i<existing.length-1)n.remove()});}
+  if(outcome?.target&&typeof outcome.target.scrollIntoView==="function"&&!outcome.target.closest(".detail-drawer"))outcome.target.scrollIntoView({behavior:"smooth",block:"center"});
+ }
+ else if(action==="prev"){document.getElementById("tourActionFeedback")?.remove();tourIndex=Math.max(0,tourIndex-1);navigate(CORE.steps[tourIndex].key)}
  else if(action==="close"){tourActive=false;renderTour()}
- else if(action==="minimize"){tourMinimized=!tourMinimized;renderTour()}
+ else if(action==="minimize"){tourMinimized=!tourMinimized;document.getElementById("tourActionFeedback")?.remove();renderTour()}
  else if(action==="scenario")chooseScenario(el.dataset.kind);
  else if(action==="view")navigate(el.dataset.view);
  else if(action==="report")downloadReport();
