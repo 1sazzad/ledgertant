@@ -15,7 +15,11 @@ function assess(invoice,state,engine){
   const cashAfter=balance-value;
   const signals=risk.reasons;
   let key,label,summary,next;
-  if(invoice.status==="paid"){
+  if(invoice.status==="rejected"){
+    key="rejected";label="REJECTED — NOT PAYABLE";
+    summary="The owner rejected this invoice. It is excluded from future payments and the cash forecast.";
+    next="Inspect the recorded reason in Invoice intelligence and the Decision ledger.";
+  }else if(invoice.status==="paid"){
     key="completed";label="Simulated payment completed";
     summary="This invoice was marked paid in the local demo. No bank transfer occurred.";
     next="Inspect its recorded local activity in the decision ledger.";
