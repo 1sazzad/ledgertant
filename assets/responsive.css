@@ -252,3 +252,13 @@ body:has(#decisionRoot .detail-drawer) { overflow:hidden; }
 @media(max-width:1120px){#decisionlab .lab-intro-grid{grid-template-columns:minmax(0,1fr)}#decisionlab .lab-options{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){#decisionlab .lab-options{grid-template-columns:minmax(0,1fr)}#decisionlab .lab-option{min-height:0}#decisionlab .lab-compare-grid{grid-template-columns:minmax(0,1fr)}#decisionlab .lab-summary-main{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){#decisionlab .lab-option{transition:none}#decisionlab .lab-option:hover{transform:none}}
+
+.demo-pin-drawer{z-index:230}
+.demo-pin-box{max-width:480px}
+.demo-pin-box .notice strong{font-size:21px;letter-spacing:.12em;color:#a8f2d8}
+.demo-pin-box .form{margin-top:17px}
+.demo-pin-box input[type=password]{font-size:20px;letter-spacing:.18em}
+.demo-pin-error{background:#562e3d;border:1px solid #d77e8d;color:#ffd6da;padding:11px 13px;border-radius:9px;margin:0}
+.demo-pin-error[hidden]{display:none}
+#demoPinRoot:empty{display:none}
+@media(max-width:640px){.demo-pin-box{max-height:90dvh;width:100%;padding-bottom:max(20px,env(safe-area-inset-bottom))}}
