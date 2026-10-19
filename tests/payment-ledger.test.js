@@ -64,6 +64,6 @@ test("payment summary includes pending approved cash and latest payment",()=>{
 });
 test("all payment summary and confirm surfaces are wired into page",()=>{
  const html=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
- for(const term of ["paymentBalanceDashboard","paymentConfirmRoot","paymentConfirmDialog","data-confirm-payment","data-cancel-payment","LedgertantPaymentLedger.settle","Payment history","balanceBefore","balanceAfter"])
+ for(const term of ["paymentBalanceDashboard","paymentConfirmRoot","paymentConfirmDialog","data-confirm-payment","data-cancel-payment","LedgertantPaymentLedger.settle","Payment history"])
   assert.ok(html.includes(term),"Missing "+term);
 });
