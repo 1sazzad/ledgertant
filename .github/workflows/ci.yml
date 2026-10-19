@@ -21,6 +21,11 @@ jobs:
           node --check assets/journey-core.js
           node --check assets/decision-core.js
           node --check assets/experience.js
+          node --check assets/invoice-workflow.js
+          node --check assets/decision-lab-core.js
+          node --check assets/overview-insights.js
+          node --check assets/tour-actions.js
+          node --check assets/mobile-nav.js
           node -e "const fs=require('fs');const src=fs.readFileSync('index.html','utf8');const a=src.indexOf('<script>'),b=src.indexOf('</script>',a);if(a<0||b<0)process.exit(1);new Function(src.slice(a+8,b));"
       - name: Run unit tests
         run: node --test tests/*.test.js
