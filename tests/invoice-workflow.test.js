@@ -60,3 +60,44 @@ test("recommending rejection does not deduct cash or remove invoice forecast",()
  const s=W.recommend(make(),args("staff"));
  assert.equal(E.forecast(s)[0].invoiceOut,14900);assert.equal(s.balance,425000);
 });
+
+test("unapproved invoice blocked before payment even when low risk",()=>{
+ const s=make(),verdict=E.policy({action:"release_payment",role:"owner",invoice:s.invoices[0],state:s});
+ assert.equal(verdict.decision,"block");
+});
+test("owner approves a low-risk invoice without transferring cash",()=>{
+ const s=make();s.invoices[0].bank="ORIGINAL";
+ const a=W.approve(s,{invoiceId:4,role:"owner",note:"Validated against invoice and records",confirmed:true},E);
+ assert.equal(a.invoices[0].status,"approved");assert.equal(a.balance,425000);
+ assert.equal(E.policy({action:"release_payment",role:"owner",invoice:a.invoices[0],state:a}).decision,"review");
+});
+test("flagged invoice requires owner verification before formal approval",()=>{
+ const s=make();
+ assert.throws(()=>W.approve(s,{invoiceId:4,role:"owner",note:"Looks legitimate",confirmed:true},E),/verification/);
+ const v=W.verify(s,{invoiceId:4,role:"owner",note:"Independently called supplier and checked bank",confirmed:true});
+ const a=W.approve(v,{invoiceId:4,role:"owner",note:"Confirmed invoice following supplier call",confirmed:true},E);
+ assert.equal(a.invoices[0].status,"approved");
+ assert.equal(E.policy({action:"release_payment",role:"owner",invoice:a.invoices[0],state:a}).decision,"review");
+});
+test("staff recommendation cannot approve or pay",()=>{
+ const s=make();const a=W.recommendApproval(s,{invoiceId:4,role:"staff",note:"Recommend owner investigate the supplier"});
+ assert.equal(a.invoices[0].status,"under_review");
+ assert.equal(E.policy({action:"release_payment",role:"staff",invoice:a.invoices[0],state:a}).decision,"block");
+ assert.throws(()=>W.approve(a,{invoiceId:4,role:"staff",note:"Approved without owner",confirmed:true},E),/Only the Business Owner/);
+});
+test("verification request marks under review but remains forecast payable",()=>{
+ const s=make();const a=W.requestVerification(s,{invoiceId:4,role:"staff",note:"Check supplier bank details"});
+ assert.equal(a.invoices[0].status,"under_review");
+ assert.equal(E.forecast(a)[0].invoiceOut,14900);
+});
+test("approval cannot be repeated and does not silently pay",()=>{
+ const s=make();s.invoices[0].bank="ORIGINAL";
+ const a=W.approve(s,{invoiceId:4,role:"owner",note:"Documents and supplier matched",confirmed:true},E);
+ assert.throws(()=>W.approve(a,{invoiceId:4,role:"owner",note:"Approve twice",confirmed:true},E),/awaiting review/);
+ assert.equal(a.invoices[0].status,"approved");
+ assert.equal(a.audit[0].type,"INVOICE APPROVED");
+});
+test("no unverified high-risk approval after legacy verified status",()=>{
+ const s=make("verified");
+ assert.throws(()=>W.approve(s,{invoiceId:4,role:"owner",note:"Prior demo verified status",confirmed:true},E),/verification/);
+});
