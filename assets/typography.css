@@ -1,0 +1,150 @@
+/*
+  Ledgertant · Clear Finance typography specification
+  Loaded after theme-polish.css so older small type declarations cannot win.
+  No external fonts: reliable in offline demos and regions with restricted CDNs.
+*/
+:root{
+  --type-font:"Segoe UI Variable","Segoe UI",Inter,"Noto Sans","Noto Sans Bengali",Arial,ui-sans-serif,system-ui,sans-serif;
+  --type-title:clamp(1.68rem,2.25vw,2.1rem);
+  --type-display:clamp(1.85rem,2.8vw,2.42rem);
+  --type-section:clamp(1.25rem,1.7vw,1.45rem);
+  --type-body:1rem;
+  --type-detail:.92rem;
+  --type-label:.85rem;
+  --type-caption:.79rem;
+  --type-eyebrow:.73rem;
+  font-family:var(--type-font);
+  font-size:16px;
+  line-height:1.62;
+  font-synthesis:none;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body,button,input,select,textarea{font-family:var(--type-font)}
+body{font-size:var(--type-body);font-weight:400;letter-spacing:-.006em}
+p,li{line-height:1.65}
+h1,h2,h3,h4{line-height:1.24;letter-spacing:-.032em;font-weight:720}
+h1{font-size:var(--type-title)}
+h2{font-size:var(--type-section)}
+h3{font-size:1.125rem}
+h4{font-size:1rem}
+strong,b{font-weight:700}
+.main{font-size:var(--type-body)}
+.main p{font-size:var(--type-detail)}
+.main h3+p,.main h2+p{line-height:1.6}
+/* Page titles and navigation are intentionally easier to scan. */
+.top h1{font-size:var(--type-title);font-weight:770;line-height:1.18;letter-spacing:-.04em}
+.top .page-kicker{font-size:var(--type-eyebrow);font-weight:770;line-height:1.35;letter-spacing:.095em}
+.top #pageSubtitle{font-size:var(--type-detail);line-height:1.52;font-weight:450}
+.top .global-role-label{font-size:var(--type-label);font-weight:660;letter-spacing:0}
+.top .global-role-label select{font-size:var(--type-label);font-weight:650}
+.top .pill{font-size:var(--type-caption);font-weight:650;line-height:1.35}
+.side .brand{font-size:1.7rem;font-weight:780;letter-spacing:-.045em}
+.side>.small,.side-bottom .small{font-size:var(--type-caption);line-height:1.53}
+.side .nav{font-size:.9rem;line-height:1.4;font-weight:560;letter-spacing:0}
+.side .nav.active{font-weight:700}
+.nav-group-label{font-size:.7rem;line-height:1.45;letter-spacing:.095em;font-weight:780}
+.side .demo{font-size:var(--type-caption);font-weight:700}
+/* Content hierarchy */
+.card h2,.section h2{font-size:var(--type-section);font-weight:720;line-height:1.28}
+.card h3,.section h3{font-size:1.14rem;font-weight:710;line-height:1.32}
+.card p,.section p,.muted,.notice{font-size:var(--type-detail);line-height:1.58}
+.small{font-size:var(--type-caption);line-height:1.55}
+.tiny-legal,.footnote{font-size:var(--type-caption);line-height:1.55}
+.foot{font-size:var(--type-caption);line-height:1.55}
+.eyebrow{font-size:var(--type-eyebrow);line-height:1.4;letter-spacing:.095em;font-weight:770}
+.demo{font-size:var(--type-caption)}
+/* Main dashboard introduction, not multiple competing heading sizes */
+.hero h2,.journey-hero h2{font-size:var(--type-display);line-height:1.17;font-weight:760;letter-spacing:-.045em}
+.hero p,.journey-hero p{font-size:1rem;line-height:1.68}
+.overview-step b{font-size:.91rem;font-weight:690;line-height:1.35}
+.overview-step small{font-size:var(--type-caption);line-height:1.55}
+.overview-step-no{font-size:var(--type-label)}
+/* Financial data: even-width digits make before/after comparison effortless. */
+.kpi-value,.metric,.journey-metric strong,.lab-option-amount,
+.payment-balance-main>strong,.payment-receipt strong,.payment-balance-stats strong,
+#decisionlab .lab-summary-main strong,.lab-compare-grid strong,
+.guide-tile>span,td,.tag,.invoice-status,.payment-history-tab strong{
+  font-variant-numeric:tabular-nums lining-nums;
+}
+.kpi-value{font-size:clamp(1.75rem,2.5vw,2.2rem);line-height:1.17;font-weight:770;letter-spacing:-.036em}
+.kpi-title{font-size:var(--type-label);line-height:1.45;font-weight:660}
+.kpi-description{font-size:var(--type-caption);line-height:1.5}
+.kpi-action,.kpi-hint{font-size:var(--type-caption);font-weight:700;line-height:1.45}
+.metric{font-size:clamp(1.65rem,2.35vw,2rem);line-height:1.22;font-weight:750}
+.payment-balance-main>strong{font-size:clamp(2.05rem,3.6vw,3rem);line-height:1.15}
+.payment-balance-main p{font-size:var(--type-detail)}
+.payment-balance-stats small,.payment-receipt span{font-size:var(--type-label)}
+.payment-balance-stats strong{font-size:1.2rem}
+.payment-receipt-final strong{font-size:1.65rem}
+.payment-latest p{font-size:var(--type-detail)}
+/* Accessible, consistent controls. */
+.btn,.invoice-tab,.payment-history-tab,.lab-option,.nav{font-family:var(--type-font)}
+.btn{font-size:var(--type-label);font-weight:700;line-height:1.36;letter-spacing:0;min-height:42px}
+.actions .btn,.table-wrap .actions .btn{font-size:var(--type-caption);font-weight:690}
+.form label{font-size:var(--type-label);font-weight:680;line-height:1.5}
+.form input,.form select,.form textarea,.chatinput{font-size:.94rem;line-height:1.5;font-weight:450}
+.form input::placeholder,.form textarea::placeholder{font-weight:430}
+.invoice-tab{font-size:var(--type-label);font-weight:680}
+.invoice-tab strong{font-size:var(--type-caption)}
+.payment-history-tab{font-size:var(--type-label);font-weight:660}
+.payment-history-tab strong{font-size:var(--type-caption)}
+/* Readable financial tables and explicit invoice statuses */
+table{font-size:var(--type-label);line-height:1.5}
+th{font-size:var(--type-caption);font-weight:730;line-height:1.44;letter-spacing:.035em}
+td{font-size:var(--type-label);line-height:1.48}
+.tag,.invoice-status{font-size:var(--type-caption);font-weight:690;line-height:1.4}
+.item,.decision-check,.result-entry{font-size:var(--type-detail);line-height:1.5}
+.result-entry small,.result-detail p{font-size:var(--type-detail);line-height:1.55}
+.kpi-dialog-list .kpi-entry strong{font-size:var(--type-detail)}
+.kpi-dialog-list .kpi-entry span,.kpi-dialog-list .kpi-entry small{font-size:var(--type-caption)}
+/* Scenario and Decision Lab: descriptions need to be large enough to read. */
+.scenario-card strong,.story-step h3,.lab-option-top strong{font-size:.95rem;line-height:1.4}
+.scenario-card small,.story-step p,.journey-metric span,
+.journey-metric small,.guide-tile span{font-size:var(--type-caption);line-height:1.55}
+.journey-metric strong{font-size:clamp(1.45rem,1.8vw,1.78rem)}
+#decisionlab .lab-option-top strong{font-size:.96rem}
+#decisionlab .lab-option-amount{font-size:clamp(1.45rem,2.4vw,1.95rem);font-weight:770}
+#decisionlab .lab-option small,#decisionlab .lab-option-caption,
+#decisionlab .lab-option-state,#decisionlab .lab-option-delta,
+#decisionlab .lab-compare-grid small,#decisionlab .lab-compare-title>span{
+  font-size:var(--type-caption);line-height:1.5
+}
+#decisionlab .lab-summary-main small{font-size:var(--type-caption)}
+#decisionlab .lab-summary-main strong{font-size:clamp(1.16rem,2vw,1.6rem);font-weight:750}
+#decisionlab .lab-summary-instruction,#decisionlab .lab-summary-context{font-size:var(--type-detail);line-height:1.5}
+#decisionlab .lab-live-marker,#decisionlab .lab-selected-chip{font-size:var(--type-caption)}
+#decisionlab .lab-compare-grid strong{font-size:1.34rem}
+/* Supportive feedback, dialogs and readable status text */
+.detail-box h2{font-size:clamp(1.35rem,2.2vw,1.82rem);font-weight:740}
+.detail-box p,.detail-box li{font-size:var(--type-detail);line-height:1.66}
+.detail-box .notice{font-size:var(--type-detail)}
+.tour-panel h3{font-size:1.13rem;font-weight:740;line-height:1.32}
+.tour-panel p{font-size:var(--type-detail);line-height:1.6}
+.tour-counter{font-size:var(--type-caption)}
+.tour-action-feedback{font-size:var(--type-detail);line-height:1.5}
+.tour-mini strong{font-size:var(--type-label)}
+.payment-warning p,.payment-warning strong{font-size:var(--type-detail);line-height:1.56}
+.security-lock-note ul{font-size:var(--type-detail);line-height:1.6}
+.chat .bubble{font-size:var(--type-detail);line-height:1.6}
+.chart .col small{font-size:var(--type-caption);line-height:1.4}
+@media(min-width:901px) and (max-width:1180px){
+  .shell{grid-template-columns:232px minmax(0,1fr)}
+  .side .nav{font-size:.87rem}
+}
+@media(max-width:900px){
+  .side .nav{font-size:.91rem}
+}
+@media(max-width:640px){
+  :root{font-size:15.5px}
+  .top h1{font-size:1.65rem}
+  .hero h2,.journey-hero h2{font-size:clamp(1.8rem,7vw,2.22rem)}
+  .top #pageSubtitle{font-size:.91rem}
+  .side .brand{font-size:1.42rem}
+  .side .nav{font-size:.93rem}
+  .overview-step b{font-size:.96rem}
+  .btn{font-size:.89rem}
+  .chart .col small{font-size:.72rem}
+  .tour-footer .btn{font-size:.88rem}
+  .payment-history-tab{font-size:.84rem}
+}
