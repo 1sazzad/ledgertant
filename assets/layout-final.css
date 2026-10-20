@@ -166,3 +166,12 @@
   #financing .funding-feature-card{min-height:0}
   #financing .funding-section-heading{margin-top:23px}
 }
+
+/* Dismissible Create Invoice form */
+.invoice-create-panel{margin:15px 0;padding:22px}
+.invoice-create-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:17px}
+.invoice-create-heading h3{margin:0 0 4px}
+.invoice-create-heading p{margin:0}
+.invoice-create-close{flex:0 0 auto}
+.invoice-create-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+@media(max-width:560px){.invoice-create-panel{padding:16px}.invoice-create-heading{flex-wrap:wrap}.invoice-create-actions .btn{flex:1 1 140px}}
