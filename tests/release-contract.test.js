@@ -52,7 +52,7 @@ test("current theme supplies readable typography and contrast variants",()=>{
  assert.match(theme,/\.payment-warning/);
 });
 test("invoice status movement, decision lab and payment navigation are connected",()=>{
- for(const token of ["invoice-queue-core.js","LedgertantInvoiceWorkflow.approve",
+ for(const token of ["invoice-queue-core.js","flow.approve(state,args,LedgertantEngine)",
  "LedgertantInvoiceQueue.nextTab","labChoiceComparison","labLiveSummary",
  "paymentBalanceDashboard","paymentConfirmDialog","LedgertantPaymentLedger.settle",
  "data-audit-tab","Blocked attempts"])
