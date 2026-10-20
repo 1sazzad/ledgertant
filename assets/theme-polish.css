@@ -1,0 +1,277 @@
+/* Ledgertant / Clear Finance UI — 2026 visual refresh.
+   Intentionally presentation-only. Loaded after legacy and responsive styles. */
+:root{
+  color-scheme:light;
+  --ui-bg:#f3f6fa;--ui-paper:#fff;--ui-text:#18293d;--ui-muted:#596d81;
+  --ui-subtle:#eff4f8;--ui-border:#d9e3eb;--ui-primary:#087d70;
+  --ui-primary-deep:#075f58;--ui-teal-tint:#e8f7f1;
+  --ui-danger:#b43750;--ui-danger-tint:#fff0f1;
+  --ui-warning:#945515;--ui-warning-tint:#fff5e6;
+  --ui-shadow:0 4px 22px rgba(18,43,67,.045);
+  font:15px/1.58 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color:var(--ui-text);background:var(--ui-bg)
+}
+html,body{background:var(--ui-bg);color:var(--ui-text)}
+h1,h2,h3,h4,strong,b{color:inherit}
+h2,h3{letter-spacing:-.035em}
+button,input,select,textarea{font-family:inherit}
+.main{max-width:1720px;width:100%;padding:29px clamp(20px,3.3vw,56px) 72px}
+.shell{grid-template-columns:248px minmax(0,1fr)}
+.side{
+  background:linear-gradient(170deg,#13283b 0%,#0e2032 100%);color:#e9f3f8;
+  border-right:1px solid #23394b;padding:23px 15px;
+  box-shadow:2px 0 22px rgba(15,37,50,.06)
+}
+.side .brand{font-size:26px;font-weight:830;letter-spacing:-1.2px;margin-bottom:7px;color:white}
+.side .brand i{color:#78e3c4}
+.side>.small,.side-bottom .small{color:#aec3d2;line-height:1.5}
+.side .demo{color:#8ff0cf}
+.side-bottom{border-top:1px solid #2c4557;padding-top:18px}
+.menu{margin-top:25px;gap:3px}
+.nav-group-label{
+  margin:21px 11px 7px;color:#8ca9ba;font-size:10px;font-weight:800;
+  letter-spacing:.14em;text-transform:uppercase
+}
+.nav-group-label:first-child{margin-top:0}
+.side .nav{display:flex;align-items:center;gap:10px;color:#c6d7e1;
+  font-size:13px;font-weight:560;padding:10px 12px;border-radius:10px;
+  min-height:43px;border:1px solid transparent;line-height:1.35}
+.side .nav-icon{display:inline-flex;justify-content:center;align-items:center;
+  height:25px;width:27px;flex:0 0 27px;border-radius:8px;
+  color:#a8c6d4;font-size:15px;font-style:normal}
+.side .nav:hover{background:#213d52;color:#fff}
+.side .nav.active{background:#264c55;border:1px solid #527c77;color:#fff;box-shadow:inset 3px 0 0 #7ee1c2}
+.side .nav.active .nav-icon{color:#98f3d4}
+.side .mobile-menu-toggle{background:#233f52;border-color:#486f7d;color:white}
+/* Title and scenario are visually distinct from page content. */
+.top{background:var(--ui-paper);padding:20px 23px;border:1px solid var(--ui-border);
+  border-radius:18px;box-shadow:var(--ui-shadow);align-items:center;gap:16px}
+.top .page-kicker{display:block;color:#08786e;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.11em;margin-bottom:3px}
+.top h1{color:#1a3045;font-weight:800;font-size:clamp(24px,2.6vw,33px);letter-spacing:-1px;line-height:1.2}
+.top #pageSubtitle{font-size:13px;color:#64778a;margin-top:4px;line-height:1.45}
+.top .toolbar{margin:0}
+.top .pill{color:#346778;border-color:#c6dedf;background:#eef8f6;font-weight:650}
+.top .global-role-label{color:#405972;font-weight:700;font-size:12px;gap:9px}
+.top .global-role-label select{color:#183048;border:1px solid #bfd0db;
+  background:white;border-radius:9px;padding:9px 10px;min-height:42px;
+  font-size:13px;max-width:180px}
+.view.section{margin-top:25px}
+.muted,.small{color:var(--ui-muted)}
+.foot,.tiny-legal,.footnote{color:#708296}
+.eyebrow{color:#047c6d}
+.demo{color:#08796c}
+.card{background:var(--ui-paper);border:1px solid var(--ui-border);
+  color:var(--ui-text);border-radius:17px;box-shadow:var(--ui-shadow)}
+.card h2,.card h3,.section h2{color:#1a3045}
+.section h2{font-size:21px;margin-bottom:12px}
+.item,.result-detail{background:#f8fafc;border:1px solid var(--ui-border);color:var(--ui-text)}
+.item p,.item span,.result-detail p{color:#587084}
+.notice{border-left:4px solid #25a487;background:#eaf7f3;color:#24564e;
+  border-radius:9px;padding:13px 16px;font-size:13px}
+.btn{background:var(--ui-primary);border:1px solid var(--ui-primary);
+  border-radius:10px;color:white;font-weight:750;
+  box-shadow:none;transition:background-color .15s ease,transform .15s ease,border-color .15s ease}
+.btn:hover:not(:disabled){background:var(--ui-primary-deep);border-color:var(--ui-primary-deep)}
+.btn.secondary,.btn.outline{background:white;border:1px solid #ccdbe5;color:#24536b}
+.btn.secondary:hover:not(:disabled),.btn.outline:hover:not(:disabled){background:#eff7fa;border-color:#90bdc4;color:#123e55}
+.btn:disabled{opacity:.55}
+.btn.reject-btn{background:#b53a54;border-color:#b53a54;color:white}
+.btn.reject-btn:hover{background:#952942;border-color:#952942}
+.link-action{color:#08796c}
+:where(button,a,input,select,textarea,[tabindex]):focus-visible{
+  outline:3px solid #319c8d!important;outline-offset:3px!important
+}
+.form label{color:#31475c;font-weight:640}
+.form input,.form select,.form textarea,.chatinput,.global-role-label select{
+  background:white;color:#1d3045;border:1px solid #c8d6e0;border-radius:10px;
+  box-shadow:inset 0 1px 1px rgba(22,45,61,.03)
+}
+.form input:focus,.form select:focus,.form textarea:focus,.chatinput:focus{
+  border-color:#169283;outline:2px solid #b1e4d6;outline-offset:0
+}
+.form input::placeholder,.form textarea::placeholder,.chatinput::placeholder{color:#8394a4}
+input[type=checkbox]{accent-color:var(--ui-primary)}
+table{color:#293c50;font-size:13px}
+th{background:#f7fafc;color:#526a7e;text-transform:uppercase;
+  letter-spacing:.04em;font-size:11px;font-weight:760}
+th,td{border-bottom:1px solid #e5edf3}
+tbody tr:hover{background:#f8fcfb}
+.table-wrap{border-radius:12px}
+.tag{background:#eff4f8;color:#3e5b72;font-weight:690}
+.tag.high{background:#fdecef;color:#a12c45}
+.tag.medium{background:#fff2df;color:#90521b}
+.tag.low{background:#e5f7ed;color:#087549}
+.invoice-status{background:#eef3f7;color:#496174;font-weight:720;text-transform:capitalize}
+.invoice-status-approved,.invoice-status-paid{background:#e4f6eb;color:#166b4e}
+.invoice-status-rejected{background:#fdecef;color:#a32f47}
+.invoice-status-under_review{background:#fff2db;color:#8c5719}
+.invoice-tabs{gap:9px}
+.invoice-tab{background:white;color:#456077;border:1px solid #d5e0e9}
+.invoice-tab strong{background:#e9f0f5;color:#456077}
+.invoice-tab.selected{background:#ddf4ec;border-color:#098577;color:#085e50}
+.invoice-tab.selected strong{background:#087d70;color:white}
+.invoice-empty{background:#f8fafc;color:#50677c;border-radius:11px}
+.grid{gap:15px}
+.kpi-grid>.kpi-button,.kpi-button{
+  background:var(--ui-paper)!important;color:var(--ui-text)!important;
+  border:1px solid #dbe5eb!important;border-radius:15px;box-shadow:var(--ui-shadow)}
+.kpi-grid>.kpi-button:hover,.kpi-button:hover,.kpi-grid>.kpi-button:focus-visible{
+  background:#f8fefb!important;border-color:#48ad97!important;transform:translateY(-1px)}
+.kpi-title{color:#50677d}
+.kpi-value{color:#162e44}
+.kpi-value.danger{color:#ad3349}
+.kpi-value.positive{color:#0a7b57}
+.kpi-description{color:#6b8193}
+.kpi-action,.kpi-hint{color:#087b6d}
+.kpi-dialog-list p,.kpi-dialog-list .kpi-entry span{color:#3e586a}
+.kpi-dialog-list .kpi-entry small{color:#677f92}
+.kpi-dialog-list .kpi-entry{border-color:#e2eaf0}
+/* Overview uses an inviting hero and a short, explicit sequence. */
+.hero{background:linear-gradient(114deg,#eaf7f3 0%,#f1f8fc 76%);
+  border:1px solid #bcded8;border-radius:20px;padding:30px;color:#18374a}
+.hero h2{font-size:clamp(25px,2.8vw,36px);line-height:1.16;max-width:800px;color:#153c43}
+.hero p{color:#4d6c75;max-width:720px;font-size:14px}
+.hero .btn{margin-top:11px}
+.overview-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:15px}
+.overview-step{display:flex;gap:13px;align-items:flex-start;background:white;
+  padding:17px 18px;border:1px solid #dce8ed;border-radius:15px;box-shadow:var(--ui-shadow)}
+.overview-step-no{display:grid;place-items:center;width:30px;height:30px;flex:none;
+  background:#dff5ee;color:#0b7467;border-radius:10px;font-weight:800;font-size:13px}
+.overview-step b{display:block;color:#1a3845;font-size:13px}
+.overview-step small{display:block;color:#617a89;font-size:12px;margin-top:2px}
+/* Charts and instructional panels */
+.chart{border-bottom:1px solid #c8d6e0}
+.chart .col span{background:linear-gradient(#26b59f,#0c7f83)}
+.chart .col small{color:#596e80}
+.bar{background:#e3edea}.bar span{background:#18a487}
+.journey-hero{background:linear-gradient(117deg,#e4f4f0,#eef5fc);
+  border:1px solid #c0ded8;color:#1d3b4b}
+.journey-hero h2{color:#123d40}
+.journey-hero p{color:#4e697b}
+.judge-panel{background:linear-gradient(119deg,#eef7f7,#f7fafc);
+  border-color:#c4deda;color:#1b3446}
+.judge-panel h3{color:#1b3544}
+.judge-panel p{color:#536d7a}
+.guide-tile,.story-step,.journey-metric,.scenario-card{
+  background:white;color:#20374a;border:1px solid #d9e5eb;border-radius:13px}
+.guide-tile span,.story-step p,.journey-metric span,.scenario-card small{color:#667c8d}
+.journey-metric small{color:#6b8193}
+.journey-metric.alert strong{color:#b54551}
+.step-number{color:#087d70}
+.scenario-card.selected{border:2px solid #0a8b7b;background:#eaf8f3}
+.scenario-dot.steady{background:#1eb28f}
+.impact-grid .journey-metric{box-shadow:var(--ui-shadow)}
+.demo-mission{background:linear-gradient(120deg,#e7f6ef,#e9f4fa);
+  border:1px solid #c2dfda;color:#214150}
+.demo-mission h2{color:#173847}
+.demo-mission p{color:#506d7b}
+.mini-metrics span{background:#d1efe6;color:#285f54}
+/* Decision Lab: explicit active choice with easy-to-read figures. */
+#decisionlab .lab-live-summary{background:#edf8f5;border:1px solid #a9dbce;color:#173e42}
+#decisionlab .lab-live-marker{color:#08776b}
+#decisionlab .lab-selected-chip{background:#d6f2e8;color:#0c6456;border-color:#81cbb6}
+#decisionlab .lab-summary-instruction,#decisionlab .lab-summary-context{color:#486b71}
+#decisionlab .lab-summary-main small,#decisionlab .lab-option-caption{color:#5e7584}
+#decisionlab .lab-good{color:#09784d}#decisionlab .lab-warning{color:#a56017}
+#decisionlab .lab-verdict{border-top-color:#d4e6e6}
+#decisionlab .lab-option{background:white;color:#203a4c;border-color:#d3e0e8}
+#decisionlab .lab-option small{color:#657d8d}
+#decisionlab .lab-option:hover{border-color:#61bdaa}
+#decisionlab .lab-option.is-selected{background:#ecf9f3;border-color:#0c897b;box-shadow:0 0 0 2px #9ad9cb44}
+#decisionlab .lab-option-state,#decisionlab .lab-option-delta{color:#057964}
+#decisionlab .lab-result-detail{border-color:#b5dcd3}
+#decisionlab .lab-compare{background:#f2f8fa;border-color:#d2e3e8}
+#decisionlab .lab-compare-grid small,#decisionlab .lab-compare-title>span{color:#647b8b}
+#decisionlab .lab-compare-grid>div{border-left-color:#1c9b87}
+#decisionlab .lab-caution{color:#805b30}
+.guide-tile b,.journey-metric strong{color:#1a3948}
+/* Verdicts differentiate blocked, review, and eligible without a neon theme. */
+.verdict{background:#fff5e5;border-left-color:#d29b42;color:#67471e}
+.verdict.ready{background:#e8f8ee;border-left-color:#16966e;color:#125d43}
+.verdict.blocked{background:#fff0f1;border-left-color:#ce5d68;color:#843041}
+.decision-check{background:#f8fafb;border:1px solid #dae5ec;color:#344b5d}
+.result-entry{background:white;color:#20394b;border:1px solid #dce5ec}
+.result-entry:hover{background:#f7fbfa;border-color:#8ac7bb}
+.result-entry small{color:#617789}
+.result-detail{background:#f8fafc;border-color:#d7e4eb}
+.result-detail p{color:#516d7e}
+/* Decision panels and guided tour share the same light system. */
+.detail-drawer{background:rgba(15,30,48,.56);backdrop-filter:blur(3px)}
+.detail-box{background:white;color:#1c3244;border-color:#d5e1e9;box-shadow:0 22px 70px #112a3b33}
+.detail-box h2{color:#183447}
+.detail-box .tiny-legal{color:#617b8c}
+.tour-panel{background:white;color:#20384a;border-color:#b5d8d1;box-shadow:0 16px 56px #17394b30}
+.tour-panel p,.tour-counter{color:#607c8a}
+.tour-panel h3{color:#1b3448}
+.tour-progress{background:#dce8e8}
+.tour-progress span{background:#0f9980}
+.close-tour{color:#2e4e60}
+.tour-action{background:#087d70;color:white}
+.tour-action:hover{background:#066c60}
+.journey-finished{background:#e6f8ef;color:#14664f;border-color:#8dcfb2}
+.tour-action-feedback{background:#f0fbf6;border-color:#89d4b9;color:#1b5d4f;box-shadow:0 12px 30px #153d4b26}
+.tour-action-feedback-close{color:#225b51;background:#dff4ea;border-color:#9fd2bf}
+.tour-action-feedback-close:hover{background:#ccecdf}
+.bubble{background:#eef3f8;color:#274659}
+.bubble.me{background:#d9f3eb;color:#225d51}
+.chat{border-radius:12px}
+/* Payment history, settings, finance and alerts */
+.payment-balance-board{background:linear-gradient(110deg,#e6f6f0,#f0f8fa);
+  border:1px solid #b9dfd1;color:#1c444a}
+.payment-balance-main>strong{color:#0b6f60}
+.payment-balance-main p{color:#5b7881}
+.payment-balance-stats>div{background:white;border-color:#d8e5e5}
+.payment-balance-stats small{color:#647d89}
+.payment-latest{border-top-color:#cadfdc}
+.payment-latest p{color:#4f6c77}
+.payment-receipt{background:#f6fafb;border-color:#d6e3e9}
+.payment-receipt span{color:#5a7184}
+.payment-receipt-final strong{color:#0a8057}
+.payment-deduction{color:#b33a4d}
+.payment-warning{background:#fff0f1;border:1px solid #efb0bb;color:#883146}
+.payment-history-tab{background:white;color:#3a596f;border:1px solid #d5e2ea}
+.payment-history-tab strong{background:#ecf2f5;color:#3a596f}
+.payment-history-tab.active{background:#ddf5eb;border:1px solid #139481;color:#095e51}
+.payment-history-empty{background:#f3f7fa;color:#627c90}
+.security-lock-note{background:#f2f7fa;border-color:#d5e4eb;color:#344d60}
+.security-lock-note ul{color:#587082}
+.owner-security-settings{border-color:#b9dbd2}
+.demo-pin-box .notice strong{color:#086d60}
+.demo-pin-error{background:#fff0f1;color:#99364b;border-color:#eeb0bd}
+.payment-confirm-box .btn{white-space:normal}
+@media(max-width:1180px){
+  .main{padding:23px 24px 55px}
+  .overview-steps{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:900px){
+  .shell{display:block}
+  .side{background:#11273b;border-right:0;border-bottom:1px solid #37596a;
+    box-shadow:0 5px 20px #122e441b}
+  .side .menu{background:#163148;border-color:#375a6b}
+  .side.menu-open .menu{display:grid}
+  .side .nav{color:#d5e3ed}
+  .side .nav.active{color:white}
+  .nav-group-label{grid-column:1/-1;margin:10px 4px 2px}
+  .top{padding:17px 19px}
+}
+@media(max-width:750px){.overview-steps{grid-template-columns:1fr;gap:9px}}
+@media(max-width:640px){
+  .main{padding:17px 12px 54px}
+  .top{padding:15px;border-radius:14px}
+  .top .toolbar{display:flex;align-items:center;gap:9px}
+  .top .pill{max-width:100%;white-space:normal}
+  .top .global-role-label{flex:1 1 100%;width:100%}
+  .top .global-role-label select{width:62%;max-width:none}
+  .overview-step{padding:13px}
+  .card{padding:16px}
+  .hero{padding:24px}
+  .table-wrap{margin:0 -2px}
+  .invoice-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .tour-panel{background:white}
+  .payment-history-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .payment-history-tab{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .btn{transition:none}
+}
