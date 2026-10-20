@@ -235,3 +235,21 @@ These controls govern only optional demonstration alerts and reminders. **Nonedi
 The dashboard now uses a bright high-contrast workspace with a dark grouped sidebar, plainer navigation labels (Overview, Invoices, Cash flow, Funding options, Compare payment options, Payments, History & activity, Guided demo, Security & controls, and Ask Ledgertant), and a simple **Review → Approve/reject → Pay** three-step introduction. Layout and accessibility styling live in `assets/theme-polish.css`, loaded after the responsive stylesheet. These are presentation-only changes; no scoring, role, audit, or payment authorization rules were changed.
 
 Visual acceptance checklist: confirm desktop and mobile navigation show every section, the Owner PIN modal and payment receipt remain legible, invoice status tabs and Decision Lab choices have clear selected states, warning/success colors remain readable, and the tour can be minimized or dismissed. The app uses browser-local synthetic data; test key workflows after deployment.
+
+## Final release QA — Visual, navigation and workflow acceptance
+
+**Code verification:** GitHub Actions checks source syntax, Node unit tests, and the static interface contract in `tests/release-contract.test.js`. The contract checks that referenced local assets exist, all ten views are present, critical workflow hooks remain connected, and desktop/mobile sidebar rules and safety disclosures remain intact. This **does not replace** real browser or accessibility testing.
+
+**Recommended final browser walkthrough (desktop and mobile):**
+
+- **Navigation:** At 100% zoom and short browser height, scroll the sidebar to access all ten pages; the OFFLINE DEMO MODE footer must never overlap Guided demo, Security & controls, or Ask Ledgertant. Verify only one page shows its selected state.
+- **Mobile:** At 360px–430px width, open the menu, visit each page and close it. No content should require horizontal page scrolling; invoice tables may scroll inside their own containers.
+- **Invoice lifecycle:** Reset → Owner approves a clean sample invoice → it moves to Approved → Payments shows it → separate PIN and final confirmation → it moves to Paid and the remaining balance updates. Test rejected and under-review paths independently.
+- **Insufficient funds:** Lower opening cash in Cash flow, try to pay an approved invoice; confirm the visible block and shortfall, unchanged balance and invoice status, and separate Blocked attempts history.
+- **Decision Lab:** Switch timing and revenue scenario; look for the highlighted option, updated comparison figures, and corresponding chart.
+- **Security:** Staff cannot release payment; owner security preferences require the publicly disclosed demonstration PIN and cannot disable protected safeguards.
+- **Funding options:** Change a funding amount; explanatory costs update and all assumed rates are labeled as illustrative.
+- **Guided demo / dialogs:** Buttons, close controls, ESC (where supported), keyboard focus, and mobile sheet positioning should remain usable. Check contrast and legibility.
+- **Persistence and Reset:** Refresh after a completed demo action to confirm browser-local state is preserved; Reset returns synthetic starting data.
+
+**Release policy:** No real transfers, real bank connections, real authentication, production fraud probabilities, or guaranteed financing are claimed. Use synthetic data only. Keep source and GitHub Pages aligned, and record deployment SHA before a live demonstration.
