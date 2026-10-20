@@ -66,3 +66,10 @@ test("demo identity boundary remains transparent and critical settings immutable
  assert.match(rules,/Only Business Owner may edit/);
  assert.match(rules,/Mandatory safeguards remain active/);
 });
+
+test("accidental Create Invoice click can be cancelled without a ledger mutation",()=>{
+ for(const token of ['id="addToggle"','aria-controls="addForm"','data-close-invoice-form','closeInvoiceForm()','invoice-create-actions','type="button" data-close-invoice-form>Cancel'])
+  assert.ok(html.includes(token),"Missing invoice cancel UI: "+token);
+ assert.match(html,/const closeInvoiceForm=\(\)=>\{[^}]*style\.display="none"/);
+ assert.match(html,/panel\.querySelector\("form"\)\?\.reset\(\)/);
+});
