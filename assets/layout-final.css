@@ -1,0 +1,168 @@
+/* Final layout repair — preserve the light Clear Finance design and business rules. */
+
+/* Desktop: three separate areas. The nav scrolls; the footer never covers menu links. */
+@media (min-width:901px){
+  .side{
+    position:sticky;
+    top:0;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    height:100dvh;
+    min-height:0;
+    overflow:hidden;
+    padding-top:18px;
+    padding-bottom:15px;
+  }
+  .side .brand-row{flex:0 0 auto}
+  .side>.small{flex:0 0 auto}
+  .side .menu{
+    display:flex;
+    flex-direction:column;
+    flex:1 1 auto;
+    min-height:0;
+    max-height:none;
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior-y:contain;
+    scrollbar-gutter:stable;
+    scrollbar-width:thin;
+    scrollbar-color:#54788c transparent;
+    margin:12px -6px 0 0;
+    padding:4px 6px 12px 0;
+    gap:2px;
+  }
+  .side .menu::-webkit-scrollbar{width:6px}
+  .side .menu::-webkit-scrollbar-thumb{background:#56788c;border-radius:10px}
+  .side .menu::-webkit-scrollbar-track{background:transparent}
+  .side .nav-group-label{
+    flex:0 0 auto;
+    margin:13px 9px 5px;
+  }
+  .side .nav-group-label:first-child{margin-top:2px}
+  .side .nav{
+    flex:0 0 auto;
+    width:100%;
+    min-height:42px;
+    padding:8px 11px;
+  }
+  .side .side-bottom{
+    position:static;
+    left:auto;right:auto;bottom:auto;
+    flex:0 0 auto;
+    margin:0;
+    padding:13px 1px 0;
+    min-height:0;
+    border-top:1px solid #355066;
+    background:transparent;
+    z-index:1;
+  }
+  .side .side-bottom .demo{font-size:.76rem;line-height:1.5}
+  .side .side-bottom .small{font-size:.76rem;line-height:1.52}
+}
+
+/* Hover should not appear to select a second page. */
+.side .nav:not(.active):hover{
+  background:rgba(221,239,245,.045);
+  border-color:transparent;
+  box-shadow:none;
+  color:#dceaf0;
+}
+.side .nav.active,
+.side .nav.active:hover,
+.side .nav[aria-current="page"]{
+  background:#245b56;
+  border:1px solid #6ac8ac;
+  box-shadow:inset 3px 0 0 #7de9c2;
+  color:#fff;
+  font-weight:720;
+}
+.side .nav.active .nav-icon,
+.side .nav[aria-current="page"] .nav-icon{color:#98f3d4}
+
+/* Funding page: give assumptions, funding need and choices distinct hierarchy. */
+#financing .funding-section-heading{
+  margin:29px 0 13px;
+  padding:0 1px;
+}
+#financing .funding-section-heading h2{
+  margin:4px 0 6px;
+  font-size:clamp(1.3rem,1.7vw,1.55rem);
+  letter-spacing:-.025em;
+}
+#financing .funding-section-heading p{
+  color:#526b7d;
+  font-size:.92rem;
+  line-height:1.65;
+  margin:0;
+  max-width:730px;
+}
+#financing .funding-feature-card{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  min-height:200px;
+  border-color:#c9dfdc;
+}
+#financing .funding-feature-card h3{
+  margin:3px 0 0;
+  font-size:1.2rem;
+  line-height:1.32;
+}
+#financing .funding-feature-card .metric{margin:6px 0 0}
+#financing .funding-feature-card p{
+  color:#465f70;
+  font-size:.95rem;
+  line-height:1.62;
+  margin:5px 0 0;
+}
+#financing .funding-feature-card .form{margin-top:3px}
+#financing .funding-feature-card .form label{font-size:.92rem}
+#financing .funding-option-card{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+#financing .funding-option-card h3{margin:3px 0 4px}
+#financing .funding-option-card>.metric{margin:5px 0 2px}
+#financing .funding-option-card>p{
+  color:#3e586b;
+  font-size:.95rem;
+  line-height:1.62;
+  margin:7px 0;
+}
+#financing .funding-option-card .small,
+#financing .funding-option-card .funding-meta{
+  color:#5d7385;
+  font-size:.875rem;
+  line-height:1.58;
+}
+#financing .funding-option-card .metric .small{
+  display:inline-block;
+  font-weight:570;
+  vertical-align:middle;
+}
+#financing .funding-meta{
+  margin-top:auto;
+  padding-top:7px;
+  border-top:1px solid #e5edf2;
+}
+#financing .funding-assumptions{
+  padding:13px 17px;
+  font-size:.93rem;
+  line-height:1.65;
+}
+#financing #finResult{
+  margin-top:22px;
+}
+#financing #finResult>p{font-size:.94rem;line-height:1.67}
+@media(max-width:900px){
+  /* Mobile uses the existing menu button; desktop scroll rules do not apply. */
+  .side .side-bottom{display:none}
+  .side.menu-open .menu{max-height:min(60dvh,550px);overflow-y:auto}
+  .side .nav-group-label{margin:9px 4px 2px}
+}
+@media(max-width:640px){
+  #financing .funding-feature-card{min-height:0}
+  #financing .funding-section-heading{margin-top:23px}
+}
